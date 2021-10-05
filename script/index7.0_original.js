@@ -30,6 +30,8 @@ var myBulletT = 0;
 var myBulletL = 0;
 //是否结束 
 var end = false;
+//global list to store all timers
+var TimerList = [];
 /*************************************一，玩家飞机与敌机的创建***************************************/
 //1.0游戏界面滚动
 var bgstep = 0;
@@ -55,10 +57,13 @@ function bgMove(){
 		}
 		else if(bgstep > bgstepLimit*5){
 			num = 0;
+			/* Debugging  */
+			bgstep = 0;
 		}
 		oPlaneGame.style.backgroundImage = "url('images/bj/"+bgArr[num]+"')";	
 	},50)
-	if(end == true){clearTimeout(t);}
+	TimerList.push(t);
+	
 }
 //1.1：玩家飞机移动函数 
 function oMyPlaneMove(event){ //event is a MouseEvent
@@ -74,27 +79,6 @@ function oMyPlaneMove(event){ //event is a MouseEvent
 		oMyPlane.style.left = (eX-33)+"px";
 	}
 }
-/*  For demonstration
-
-function oMyPlaneMoveLeft(leftDelta){
-	if((eY-40)>0 && (eY-40)<480 && (eX-leftDelta)>0 && (eX-leftDelta)<260){
-		oMyPlane.style.top = (eY-40)+"px";
-		oMyPlane.style.left = (eX-leftDelta)+"px";
-	}
-}
-
-if (detect user moves left){
-	
-	const leftDelta = 20px;
-	oMyPlaneMoveLeft(leftDelta);
-
-	=======
-	leftDelta = MapFromUserToPlane(BlazeFace.MeasureAngle());
-	oMyPlaneMoveLeft(leftDelta);
-}
-
- */
-
 
 //1.2.1,玩家飞机发出导弹函数
 function bulletsMove(){
@@ -103,7 +87,7 @@ function bulletsMove(){
 	bullet.className = "bullet";
 	bullet.style.bottom = 90+"px";
 	oMyPlane.appendChild(bullet);
-	//创建节点hi起来 
+	//设置导弹定时移动 
 	var t = setInterval(function fun(){
 		bullet.style.top = bullet.offsetTop - 14 +"px";
 		myBulletT = -parseInt(bullet.style.top);
@@ -112,6 +96,7 @@ function bulletsMove(){
 		}
 		if(end == true){clearTimeout(t);}
 	},0);
+	TimerList.push(t);
 	myBulletH = getLinkHeight(bullet);
 	myBulletW = getLinkWidth(bullet);
 	myBulletL = getLinkLeft(bullet);
@@ -141,30 +126,49 @@ function enemyPlanes(type){
 	enemy.style.top = 10 + "px";
 	enemy.style.left =  rPOsition +"px";
 	enemyPlaneL = parseInt(enemy.style.left);
+	//将这个敌机实例放入全局变量的列表中
 	enemyArr[i] = enemy; 
+	i++;
 	oPlaneGame.appendChild(enemy);
-	//移动 
+	//敌机周期性移动 
 	var t = setInterval(function(){	
+		//当敌机还在游戏区域中时
 		if(parseInt(enemy.style.top) <= 560){
-			 enemy.style.top  = enemy.offsetTop+to+"px";
+			 enemy.style.top  = enemy.offsetTop + to + "px";
 			 enemyPlaneT = parseInt(enemy.style.top);
 			 // alert(crash)
 		}
 		else{
+		//敌机飞出游戏区域，移除这个实例
 			oPlaneGame.removeChild(enemy);
 			clearTimeout(t);
+			/* Debugging */
+			clearInterval(t1);
 		}
 	},time);
-	//当敌机爆炸以后移除敌机 
+	//以下几种情况需要移除敌机实例
 	var t1 = setInterval(function(){
- 		if(enemy.style.backgroundImage.match('ownbz.png')){
+		if (parseInt(enemy.style.top) > 560){
+			//敌机飞出游戏区域，移除这个实例
+			oPlaneGame.removeChild(enemy);
+			clearTimeout(t);
+			clearInterval(t1);
+		}
+ 		else if(enemy.style.backgroundImage.match('ownbz.png')){
+			//当敌机爆炸以后移除敌机 
+			clearInterval(t);
  			oPlaneGame.removeChild(enemy);
  			clearTimeout(t1);
  		}
+		else if (end == true){
+			//此敌机还未飞出游戏区域,也未与小飞机相撞,但是小飞机与其他敌机相撞
+			oPlaneGame.removeChild(enemy);
+			clearTimeout(t);
+			clearInterval(t1);
+		} 
  	},500)
 	enemyPlaneH = getLinkHeight(enemy);
 	enemyPlaneW = getLinkWidth(enemy); 
-	i++;
 }
 function enemyCreate(){
 	//15小 = 3中1 = 2中2 = 1大
@@ -177,7 +181,7 @@ function enemyCreate(){
 		if(time == 11){time = 0;enemyPlanes(3);}  //大、
 		if(end == true){clearTimeout(t);}
 	},800)
-	
+	TimerList.push(t);
 }
 /*************************************二，玩家飞机与敌机的交互***************************************/
 //2.0玩家飞机与敌机的碰撞检测 
@@ -193,24 +197,38 @@ function planesCrash(){
 					Math.abs(myPlaneL-getLinkLeft(enemyArr[i]))< myPlaneW||
 					Math.abs(myPlaneL-getLinkLeft(enemyArr[i]))< getLinkWidth(enemyArr[i])
 				)
-				&&(
+				&&
+				(
 				   Math.abs(myPlaneT-parseInt(enemyArr[i].style.top))< myPlaneH||
 				   Math.abs(myPlaneT-parseInt(enemyArr[i].style.top))< getLinkHeight(enemyArr[i])	
 				)
 			 ){
 			 	//碰撞以后，游戏结束
-			 	//玩家飞机被炸毁， 
-			 	oMyPlane.style.backgroundImage = "url('images/crash/xzfjbz.png')";
-			 	oMyPlane.style.backgroundSize = "cover";
-			 	//可以再玩一次 
-			 	oRelAlert.style.display = "block";
-			 	oStop.style.display = "block";
-			 	//显示分数 
- 				oScoreIn.innerHTML =  scoreNum;
- 				clearTimeout(t);
- 				end = true;
+				end = true;
+				//跟小飞机相撞的敌机爆炸(从而被移除，见enermyPlanes())
+				enemyArr[i].style.backgroundImage="url('images/crash/ownbz.png')";
+				break;
+			 	
 			}
 		}; 
+		if (end == true){
+			//游戏结束,玩家飞机被炸毁 
+			oMyPlane.style.backgroundImage = "url('images/crash/xzfjbz.png')";
+			oMyPlane.style.backgroundSize = "cover";
+			//可以再玩一次 
+			oRelAlert.style.display = "block";
+			oStop.style.display = "block";
+			
+			//显示分数 
+			oScoreIn.innerHTML =  scoreNum;
+
+			/* Debugging: remove all timers when game over */ 
+			TimerList.map((_) => clearInterval(_));
+
+			//解除用户鼠标对小飞机的操控
+			oMyPlane.onmousemove = null;
+			oPlaneGame.onmousemove = null;
+		}
 	// },10)
 }
 //2.1玩家飞机导弹与敌机的碰撞检测
@@ -219,7 +237,7 @@ var scoreNum = 0;
 //敌机是否与导弹碰撞
 var enemyOver = false;
 function bulletPlanesCrash(){
-	// var t =setInterval(function(){
+
 		myPlaneL = getLinkLeft(oMyPlane);
 		myBulletL = myPlaneL+30;
 		for (var i = 0; i < enemyArr.length; i++) {
@@ -241,8 +259,8 @@ function bulletPlanesCrash(){
 				enemyOver  = false;
 			}		
 		};
-		if(end == true){clearTimeout(t);} 
-	// },10);
+		
+
 }
 //3.0实时显示分数
 function displayScore(){
@@ -253,6 +271,7 @@ function displayScore(){
 		oScoreLTPlay.innerHTML = scoreNum;
 		if(end == true){clearTimeout(t);}		
 	},1) 
+	TimerList.push(t);
 }
 /*************************************三，js获取外部样式表属性的函数***************************************/
 function getLinkHeight(object){
@@ -280,10 +299,10 @@ function Main(){
 	enemyCreate();
 	//2.0飞机与飞机之间的碰撞检测
 	var t = setInterval(function(){planesCrash();bulletPlanesCrash()},50);
+	TimerList.push(t);
 	//2.1飞机与导弹之间的碰撞检测
-	// var t = setInterval(function(){},10);
 	//3.0实时显示分数 
 	displayScore();
 }
-// execute Main function when body loading is finished  
+// Execute Main function when <body> is loaded  
 window.addEventListener("load", Main, false);

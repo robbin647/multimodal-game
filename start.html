@@ -26,5 +26,33 @@
 			</div>
 		</div>
 	</body>
-	<script src="script/index7.0_original.js"></script>
+	<script type="module" src="./script/index7.0.js"></script>
+	<script type="module" src="./script/GameAPI.js"></script>
+	<script type="module">
+		import GameAPI from './script/GameAPI.js';
+
+		//创建一个GameAPI实例
+		const api = new GameAPI();
+
+		//让GameAPI启动游戏
+		api.StartGame();
+
+		//设置导弹的产生速率，单位：每秒多少个导弹
+		api.SetBulletSpeed(100);
+
+		//让小飞机开火，小飞机默认初始时不开火
+		api.StartFire();
+
+		//可以利用setTimeout函数让某个命令在一定时间后执行
+		//这里是让API在5000毫秒后向小飞机发出停火命令
+		let t1 = setTimeout(()=>{
+			api.CeaseFire();
+		}, 5000);
+
+		let t2 = setTimeout(()=>{
+			api.SetBulletSpeed(20);
+			api.StartFire();
+		},6500);
+		
+	</script>
 </html>

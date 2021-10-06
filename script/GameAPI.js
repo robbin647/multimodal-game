@@ -8,7 +8,10 @@ import PlaneGame from './index7.0.js';
 const MyGame = new PlaneGame();
 
 class Bomber{ 
-    
+    /* Declaring private fields */
+    #oMyPlaneMovesHorizontal;
+    #HorizontalDelta;
+
     constructor(){
         this.#oMyPlaneMovesHorizontal = MyGame.oMyPlaneMovesHorizontal;
         
@@ -36,10 +39,25 @@ class Bomber{
 
 }
 
-class Bullet{
+const BulletNTimer = class {
+    constructor(Bullet, TimerID) {
+        this.Bullet = Bullet;
+        this.TimerID = TimerID;
+    }
+    GetBullet = ()=> (this.Bullet);
+    GetTimerID = ()=> (this.TimerID);
+}
+
+class BulletController{
+    /* Declaring private fields */
+    #GenInterval;
+    #IsFireEnabled;
+    #AllBulletNTimers;
+
     constructor(){
         this.#GenInterval = 5; //Generation interval of single bullet, unit: millisecond 
         this.#IsFireEnabled = false;
+        this.#AllBulletNTimers = [];  // a list of BulletNTimer unity 
     }
 
     /**
@@ -70,7 +88,8 @@ class Bullet{
     SetSpeed(speed){
         if (speed > 0){
             let BulletGenInterval = 1.0 / speed;
-            this.#SetGenInterval(Math.floor(BulletGenInterval));
+
+            this.#SetGenInterval(Math.floor(BulletGenInterval * 1000));
 
             /* Speed < 33 bullet/sec is quite slow and will affect user experience*/
             if (speed < 33){
@@ -97,6 +116,10 @@ class Bullet{
     Fire(){
         if (this.#IsFireEnabled == false){
             this.#IsFireEnabled = true;
+            var NewBullet = MyGame.CreateBullet();
+            var NewTimerID = MyGame.BulletMove(NewBullet, this.GetGenInterval());
+            var NewBulletNTimer = new BulletNTimer(NewBullet, NewTimerID);
+            this.#AllBulletNTimers.push(NewBulletNTimer);
         }
     }
 
@@ -108,25 +131,58 @@ class Bullet{
     CeaseFire(){
         if (this.#IsFireEnabled == true){
             this.#IsFireEnabled = false;
+ 
+            //clear the list of BulletNTimer objects
+            while (this.#AllBulletNTimers.length > 0){
+                let _ = this.#AllBulletNTimers.pop();
+                MyGame.ClearBullet(_.GetBullet(), _.GetTimerID());
+            }
         }
     }
 
 }
 
 export default class GameAPI {
-    
+    /* Declaring private fields */
+    #Bomber;
+    #BulletController;
+
     constructor(){
     /*
      * Initialize private attributes 
      * 
      */ 
         this.#Bomber = new Bomber();
-        this.#Bullet = new Bullet();
+        this.#BulletController = new BulletController();
     }
     
     
-    StartGame = () => {MyGame.GameStart();}
+    StartGame = () => {
+        // 1.0 背景变动
+        MyGame.bgMove();
 
+        //1.1 允许鼠标操控小飞机
+        MyGame.BomberControlledByCursor();
+
+        // //1.2创建敌机 
+        MyGame.enemyCreate();
+
+        //2.0飞机与飞机之间的碰撞检测
+        var DetectCrash = setInterval(() => {
+            MyGame.planesCrash();
+            MyGame.bulletPlanesCrash();
+        },50);
+        MyGame.TimerList.push(DetectCrash);
+
+        //3.0实时显示分数 
+	    MyGame.displayScore();
+    }
     
+    StartFire = () => {this.#BulletController.Fire();}
+
+    CeaseFire = () => {this.#BulletController.CeaseFire();}
+    
+    SetBulletSpeed = (speed) => {this.#BulletController.SetSpeed(speed);} 
 }
+
 

@@ -32,11 +32,14 @@ var myBulletL = 0;
 //是否结束 
 var end = false;
 //global list to store all timers
-var TimerList = [];
+this.TimerList = [];
+/* Debugging 
+this.enemyPlanes = this.enemyPlanes.bind(this);
+*/
 /*************************************一，玩家飞机与敌机的创建***************************************/
 //1.0游戏界面滚动
 var bgstep = 0;
-function bgMove(){
+this.bgMove = function(){
 	var t = setInterval(function(){
 		bgstep += 2;
 		var bgstepLimit = 500;
@@ -63,10 +66,10 @@ function bgMove(){
 		}
 		oPlaneGame.style.backgroundImage = "url('images/bj/"+bgArr[num]+"')";	
 	},50)
-	TimerList.push(t);
+	this.TimerList.push(t);
 	
 }
-/* 1.1：玩家飞机移动函数 - 鼠标操控
+/// 1.1：玩家飞机移动函数 - 鼠标操控
 function oMyPlaneMove(event){ //event is a MouseEvent
 	this.style.cursor = "pointer";
 	//处理事件对象的兼容性
@@ -80,13 +83,24 @@ function oMyPlaneMove(event){ //event is a MouseEvent
 		oMyPlane.style.left = (eX-33)+"px";
 	}
 }
-*/
+
+/**
+ * This function makes bomber to follow the cursor's movement
+ * No parameter required
+ * @return void; 
+ */
+this.BomberControlledByCursor = function(){
+	oPlaneGame.onmousemove = oMyPlaneMove;
+	oMyPlane.onmousemove = oMyPlaneMove; 
+}
+
+
 /**
  * Moves the bomber horizontally by ```XDelta``` pixels
  * @param XDelta: Number; can be positive or negative value
  * @return void;
  */
-function oMyPlaneMovesHorizontal(XDelta){
+this.oMyPlaneMovesHorizontal = function(XDelta){
 	let MyPlaneLeft = getLinkLeft(oMyPlane);
 
 	let NewLeftValue = MyPlaneLeft + XDelta;
@@ -101,7 +115,7 @@ function oMyPlaneMovesHorizontal(XDelta){
  * @param XDelta: Number; can be positive or negative value
  * @return void;
  */
-function oMyPlaneMovesVertical(YDelta){
+this.oMyPlaneMovesVertical = function(YDelta){
 	let MyPlaneTop = getLinkTop(oMyPlane);
 
 	let NewTopValue = MyPlaneTop + YDelta;
@@ -113,7 +127,7 @@ function oMyPlaneMovesVertical(YDelta){
 }
 
 //1.2.1,玩家飞机发出导弹函数
-function bulletsMove(){
+/* function bulletsMove(){
 	//创建节点 
 	var  bullet = document.createElement("div");
 	bullet.className = "bullet";
@@ -132,10 +146,57 @@ function bulletsMove(){
 	myBulletH = getLinkHeight(bullet);
 	myBulletW = getLinkWidth(bullet);
 	myBulletL = getLinkLeft(bullet);
+} */
+
+
+////1.2.1,产生导弹实例
+/**
+ * @return HTMLElement: the reference to a bullet element
+ */
+this.CreateBullet = function(){
+	//创建节点 
+	var  bullet = document.createElement("div");
+	bullet.className = "bullet";
+	bullet.style.bottom = 90+"px";
+	oMyPlane.appendChild(bullet);
+	return bullet;
+}
+////1.2.2,让导弹实例周期性移动
+/**
+ * Let the bullet passed in to move periodically
+ * @param Bullet {HTMLElement} the reference to the created Bullet element
+ * @param Interval {Number} determines the time interval for Bullet to make a move (unit: ms)
+ * @return {Number} the timer ID for the bullet movement
+ */
+this.BulletMove = function(Bullet, Interval){
+	var TimerBulletMove = setInterval(function fun(){
+		Bullet.style.top = Bullet.offsetTop - 14 +"px";
+		myBulletT = -parseInt(Bullet.style.top);
+		if(parseInt(Bullet.style.top) <= -460){
+			Bullet.style.top = -20+"px";
+		}
+		/* Debugging */
+		// if(end == true){clearTimeout(t);}
+	},Interval);
+	/* Don't need to push to TimerList, because we keep TimerID in a BulletNTimerID object in GameAPI*/
+	// TimerList.push(TimerBulletMove);
+	return TimerBulletMove;
+}
+////1.2.3,清除导弹实例
+this.ClearBullet = function(Bullet, TimerID){
+	//TO DO: Given a bullet and its timer. Clear the Bullet from the screen
+	// and clear the timer
+	try{
+		oMyPlane.removeChild(Bullet);
+		clearInterval(TimerID);
+	}
+	catch (e){
+		
+	}
 }
 //1.2.2敌机随机出现(数量随机、种类随机、位置随机、速度随机) 
 //随机创建敌机函数
-function enemyPlanes(type){
+const enemyPlanes = function(type){
 	var enemyClass = ["enemyXiao","enemyZhong1","enemyZhong2","enemyDa"];
 	var enemyType = ["xiaofeiji.png","xiaozhong.png","zhong.png","dafeiji.png"];
 	//位置随机、位置随机、速度随机(时间)
@@ -202,7 +263,8 @@ function enemyPlanes(type){
 	enemyPlaneH = getLinkHeight(enemy);
 	enemyPlaneW = getLinkWidth(enemy); 
 }
-function enemyCreate(){
+//随机创建敌机
+this.enemyCreate=function(){
 	//15小 = 3中1 = 2中2 = 1大
 	var time = 0;
 	var t = setInterval(function(){
@@ -213,11 +275,11 @@ function enemyCreate(){
 		if(time == 11){time = 0;enemyPlanes(3);}  //大、
 		if(end == true){clearTimeout(t);}
 	},800)
-	TimerList.push(t);
+	this.TimerList.push(t);
 }
 /*************************************二，玩家飞机与敌机的交互***************************************/
 //2.0玩家飞机与敌机的碰撞检测 
-function planesCrash(){
+this.planesCrash= function(){
 
 	// var t = setInterval(function(){
 		myPlaneT = getLinkTop(oMyPlane);
@@ -255,7 +317,7 @@ function planesCrash(){
 			oScoreIn.innerHTML =  scoreNum;
 
 			/* Debugging: remove all timers when game over */ 
-			TimerList.map((_) => clearInterval(_));
+			this.TimerList.map((_) => clearInterval(_));
 
 			//解除用户鼠标对小飞机的操控
 			oMyPlane.onmousemove = null;
@@ -268,7 +330,7 @@ function planesCrash(){
 var scoreNum = 0;
 //敌机是否与导弹碰撞
 var enemyOver = false;
-function bulletPlanesCrash(){
+this.bulletPlanesCrash = function(){
 
 		myPlaneL = getLinkLeft(oMyPlane);
 		myBulletL = myPlaneL+30;
@@ -295,7 +357,7 @@ function bulletPlanesCrash(){
 
 }
 //3.0实时显示分数
-function displayScore(){
+this.displayScore = function(){
 	var t =setInterval(function(){	
 		if(enemyOver  == true && end == false){
 			scoreNum ++;
@@ -303,7 +365,7 @@ function displayScore(){
 		oScoreLTPlay.innerHTML = scoreNum;
 		if(end == true){clearTimeout(t);}		
 	},1) 
-	TimerList.push(t);
+	this.TimerList.push(t);
 }
 /*************************************三，js获取外部样式表属性的函数***************************************/
 function getLinkHeight(object){
@@ -319,14 +381,14 @@ function getLinkTop(object){
 	return parseInt(window.getComputedStyle ? window.getComputedStyle(object,false).top : object.currentStyle.top);
 } 
 /*************************************四,执行***************************************/
-function GameStart(){	
+/* function GameStart(){	
 	// 1.0 背景变动
 	bgMove();
 	// //1.1,随着鼠标的移动而移动
 	//oPlaneGame.onmousemove = oMyPlaneMove;
 	// //从背景移入飞机时，触发e的事件源发生了变化（由背景变为了玩家飞机），所以代码中的数值也发生了变化)  
 	//oMyPlane.onmousemove = oMyPlaneMove; 
-	bulletsMove();
+	//bulletsMove();
 	// //1.2创建敌机 
 	enemyCreate();
 	//2.0飞机与飞机之间的碰撞检测
@@ -335,7 +397,7 @@ function GameStart(){
 	//2.1飞机与导弹之间的碰撞检测
 	//3.0实时显示分数 
 	displayScore();
-} 
+}  */
 }
 
 // Execute Main function when <body> is loaded  

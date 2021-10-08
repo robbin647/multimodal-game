@@ -70,6 +70,22 @@ this.bgMove = function(){
 	
 }
 /// 1.1：玩家飞机移动函数 - 鼠标操控
+/**
+ * This is a helper function to ```oMyPlaneMove``` 
+ * It retrieves the dynamic CSS style values of the HTMLElement "#planeGame"
+ * No parameter required
+ * @return {CSSStyleDeclaration} an object containing all CSS Styles of "#planeGame"
+ */
+function GetGameBoardCSSStyle(){
+	return window.getComputedStyle(oPlaneGame, false);
+}
+
+/**
+ * This function updates the position of ```oMyPlane```
+ *   according to the cursor's position
+ * @param event {MouseEvent}
+ * @return {void}
+ */
 function oMyPlaneMove(event){ //event is a MouseEvent
 	this.style.cursor = "pointer";
 	//处理事件对象的兼容性
@@ -89,9 +105,15 @@ function oMyPlaneMove(event){ //event is a MouseEvent
  * No parameter required
  * @return void; 
  */
-this.BomberControlledByCursor = function(){
-	oPlaneGame.onmousemove = oMyPlaneMove;
-	oMyPlane.onmousemove = oMyPlaneMove; 
+this.BomberControlledByCursor = function(IsEnableControl){
+	if (IsEnableControl == true){
+		oPlaneGame.onmousemove = oMyPlaneMove;
+		oMyPlane.onmousemove = oMyPlaneMove; 
+	}
+	else{
+		oPlaneGame.onmousemove = null;
+		oMyPlane.onmousemove = null;
+	}
 }
 
 
@@ -101,28 +123,37 @@ this.BomberControlledByCursor = function(){
  * @return void;
  */
 this.oMyPlaneMovesHorizontal = function(XDelta){
-	let MyPlaneLeft = getLinkLeft(oMyPlane);
+	let MyPlaneLeft = getLinkLeft(oMyPlane); 
 
 	let NewLeftValue = MyPlaneLeft + XDelta;
-	//Bad practice: hard-coded value
 	// This is to ensure the bomber is within the boundary of game board
-	if (NewLeftValue > 505 && NewLeftValue < 765){
-		oMyPlane.style.left = NewLeftValue;
+	// 60 is the width of the ```oMyPlane``` element
+	if (( NewLeftValue > 0) && 
+	     (NewLeftValue < parseInt(GetGameBoardCSSStyle().width) - 60)
+	    )
+	{
+		oMyPlane.style.left = NewLeftValue + 'px';
 	}
 }
 /**
  * Moves the bomber vertically by ```YDelta``` pixels
  * @param XDelta: Number; can be positive or negative value
- * @return void;
+ * @return {void};
  */
 this.oMyPlaneMovesVertical = function(YDelta){
-	let MyPlaneTop = getLinkTop(oMyPlane);
+	let MyPlaneBottom = getLinkBottom(oMyPlane);
 
-	let NewTopValue = MyPlaneTop + YDelta;
-	//Bad practice: hard-coded value
+	// because we define y-axis positive direction to be downwards
+	// so you need to subtract it, not to add it
+	let NewBottomValue = MyPlaneBottom - YDelta;
+
 	// This is to ensure the bomber is within the boundary of game board
-	if (NewTopValue > 72 && NewTopValue < 552){
-		oMyPlane.style.top = NewTopValue;
+	// 80 is the height of the ```oMyPlane``` element
+	if (NewBottomValue > 0 && 
+		NewBottomValue < parseInt(GetGameBoardCSSStyle().height) - 80
+		)
+	{
+		oMyPlane.style.bottom = NewBottomValue + 'px';
 	}
 }
 
@@ -380,6 +411,9 @@ function getLinkLeft(object){
 function getLinkTop(object){
 	return parseInt(window.getComputedStyle ? window.getComputedStyle(object,false).top : object.currentStyle.top);
 } 
+function getLinkBottom(object){
+	return parseInt(window.getComputedStyle ? window.getComputedStyle(object,false).bottom : object.currentStyle.bottom);
+}
 /*************************************四,执行***************************************/
 /* function GameStart(){	
 	// 1.0 背景变动

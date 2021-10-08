@@ -9,24 +9,35 @@ const MyGame = new PlaneGame();
 
 class Bomber{ 
     /* Declaring private fields */
+    #BomberControlledByCursor;
     #oMyPlaneMovesHorizontal;
+    #oMyPlaneMovesVertical;
     #HorizontalDelta;
+    #VerticalDelta;
 
     constructor(){
         this.#oMyPlaneMovesHorizontal = MyGame.oMyPlaneMovesHorizontal;
-        
-        // Describes how far the bomber moves to left/right at a time
+        this.#oMyPlaneMovesVertical = MyGame.oMyPlaneMovesVertical;
+        this.#BomberControlledByCursor = MyGame.BomberControlledByCursor;
+        // Describes how far the bomber moves to left/right/up/down at a time
         this.#HorizontalDelta = 20;
+        this.#VerticalDelta = 20;
+    }
+
+    EnableCursorControl(){
+        this.#BomberControlledByCursor(true);
+    }
+
+    DisableCursorControl(){
+        this.#BomberControlledByCursor(false);
     }
 
     SetHorizontalDelta(value){
-        if (value >= 0){
-            this.#HorizontalDelta = value;
-        }
+        this.#HorizontalDelta = value;
     }
 
-    GetHorizontalDelta(){
-        return this.#HorizontalDelta;
+    SetVerticalDelta(value){
+        this.#VerticalDelta = value;
     }
 
     MoveLeft(){
@@ -37,6 +48,13 @@ class Bomber{
         this.#oMyPlaneMovesHorizontal(this.#HorizontalDelta);
     }
 
+    MoveUp(){
+        this.#oMyPlaneMovesVertical(0 - this.#VerticalDelta);
+    }
+
+    MoveDown(){
+        this.#oMyPlaneMovesVertical(this.#VerticalDelta);
+    }
 }
 
 const BulletNTimer = class {
@@ -162,7 +180,7 @@ export default class GameAPI {
         MyGame.bgMove();
 
         //1.1 允许鼠标操控小飞机
-        MyGame.BomberControlledByCursor();
+        //MyGame.BomberControlledByCursor();
 
         // //1.2创建敌机 
         MyGame.enemyCreate();
@@ -176,13 +194,33 @@ export default class GameAPI {
 
         //3.0实时显示分数 
 	    MyGame.displayScore();
-    }
-    
-    StartFire = () => {this.#BulletController.Fire();}
 
+        /* //禁止鼠标操控小飞机
+		this.#Bomber.DisableCursorControl();
+
+		//设置导弹的产生速率，单位：每秒多少个导弹
+		this.#BulletController.SetSpeed(100);
+
+		//让小飞机开火，小飞机默认初始时不开火
+		this.#BulletController.Fire();
+
+		//小飞机上下左右移动
+		this.#Bomber.SetVerticalDelta(200); this.#Bomber.MoveUp();
+        this.#Bomber.SetHorizontalDelta(30); this.#Bomber.MoveLeft(); */
+
+    }
+
+    /*      Bullet Features     */
+    StartFire = () => {this.#BulletController.Fire();}
     CeaseFire = () => {this.#BulletController.CeaseFire();}
-    
     SetBulletSpeed = (speed) => {this.#BulletController.SetSpeed(speed);} 
+
+    /*      Bomber Features      */
+    AllowCursorControlOnBomber = (IsAllow) => {(IsAllow)? this.#Bomber.EnableCursorControl() : this.#Bomber.DisableCursorControl();}
+    BomberMovesUpBy = (distance) => {this.#Bomber.SetVerticalDelta(distance); this.#Bomber.MoveUp();}
+    BomberMovesDownBy = (distance) => {this.#Bomber.SetVerticalDelta(distance); this.#Bomber.MoveDown();}
+    BomberMovesLeftBy = (distance) => {this.#Bomber.SetHorizontalDelta(distance);this.#Bomber.MoveLeft();}
+    BomberMovesRightBy = (distance) => {this.#Bomber.SetHorizontalDelta(distance); this.#Bomber.MoveRight();}
 }
 
 

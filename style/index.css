@@ -18,7 +18,12 @@ a{
 	/*background:url("../images/bj/bg1.jpg") no-repeat;*/
 	/*正确的写法*/
 	background-image:url("../images/bj/bg1.jpg");
-	background-position:0px 0px;
+	
+	
+	/* Debugging */
+	/* background-position:0px 283px; */
+	background-position: 0px 0px;
+
 	margin:10px auto;
 	position: relative;
 	overflow:hidden;
@@ -29,6 +34,11 @@ a{
 	background:url("../images/own/own.png") no-repeat;
 	position: absolute;
 	bottom:0px;left:120px;
+	
+	/* Debugging 
+	position: sticky;
+	bottom: 240px; left: 130px;
+	*/
 	background-size: contain;
 	/*border:1px solid red;*/
 }

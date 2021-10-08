@@ -19,7 +19,22 @@ Currently the GameAPI (1st release) offers the following functions:
 + ```GameAPI.SetBulletSpeed(speed: Number): void```  
   Set the speed at which bullets are generated. The unit for speed is **(number of bullets)/second**. For good user experience, Robbin recommends you set a value larger than 33.
 
-+ Extra Note: 
++ ```GameAPI.AllowCursorControlOnBomber(IsAllow: Boolean): void```
+  This controls whether the bomber can be controlled by mouse cursor (the original game feature).
+
++ ```GameAPI.BomberMovesUpBy(distance: Number): void```
+  Makes the bomber move up by a certain ```distance``` (unit: pixel).
+
++ ```GameAPI.BomberMovesDownBy(distance: Number): void```
+  Similar to ```GameAPI.BomberMovesUpBy()```.
+
++ ```GameAPI.BomberMovesLeftBy(distance: Number): void```
+  Similar to ```GameAPI.BomberMovesUpBy()```.
+
++ ```GameAPI.BomberMovesRightBy(distance: Number): void```
+  Similar to ```GameAPI.BomberMovesUpBy()```.
+
+## Extra Note: 
   > **How to Import Javascript Module from external javascript file into ```<script>``` tag of HTML file?**
 
 

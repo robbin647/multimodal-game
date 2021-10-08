@@ -37,22 +37,18 @@
 		//让GameAPI启动游戏
 		api.StartGame();
 
+		//禁止鼠标操控小飞机
+		api.AllowCursorControlOnBomber(false);
+
 		//设置导弹的产生速率，单位：每秒多少个导弹
 		api.SetBulletSpeed(100);
 
 		//让小飞机开火，小飞机默认初始时不开火
 		api.StartFire();
 
-		//可以利用setTimeout函数让某个命令在一定时间后执行
-		//这里是让API在5000毫秒后向小飞机发出停火命令
-		let t1 = setTimeout(()=>{
-			api.CeaseFire();
-		}, 5000);
-
-		let t2 = setTimeout(()=>{
-			api.SetBulletSpeed(20);
-			api.StartFire();
-		},6500);
-		
+		//小飞机上下左右移动
+		api.BomberMovesUpBy(200);
+		api.BomberMovesRightBy(30);
+				 
 	</script>
 </html>

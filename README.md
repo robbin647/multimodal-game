@@ -1,11 +1,13 @@
 # Game of Bombers
 
 
-## GameAPI (v.1)
+## GameAPI (v.2)
+
+GameAPI (2nd release) comes up!
 
 Since there are quite a few bugs in the original game, Robbin tried hard to develop this API while fixing the bugs at the same time. And he decided to deliver the GameAPI in several releases.
 
-Currently the GameAPI (1st release) offers the following functions:
+The 2nd release gives you these functions:
 
 + ```GameAPI.StartGame(): void```  
  Start the bomber game.
@@ -36,8 +38,7 @@ Currently the GameAPI (1st release) offers the following functions:
 
 ## Extra Note: 
   > **How to Import Javascript Module from external javascript file into ```<script>``` tag of HTML file?**
-
-
+ 
   > Ans: add ```type="module"``` to script tag. it will work. See [StackOverflow](https://stackoverflow.com/questions/62783429/how-to-import-javascript-module-from-external-javascript-file-into-script-tag).
   
   e.g.
@@ -46,7 +47,16 @@ Currently the GameAPI (1st release) offers the following functions:
      import JSZip from '../node_modules/jszip/dist/jszip.min.js';
   </script>
   ```
+ 
+  > **I download a copy of this repo. But the browser reports an error loading JS modules and cannot load the game. What's wrong?**  
+  
+  > Ans: You may try to put the whole repo on a Web Server so that all files come from the same origin. Loading JS module files from local file system is currently banned due to security concerns.
+ 
+  > **How will we combine our JS code together?**
 
+  > Ans: We will use [Webpack](https://webpack.js.org/guides/getting-started/).
+ 
+ 
 
 ## Useful Information
 

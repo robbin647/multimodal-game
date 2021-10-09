@@ -116,6 +116,27 @@ this.BomberControlledByCursor = function(IsEnableControl){
 	}
 }
 
+/**
+ * Set the position of ```oMyPlane``` by the two percentages
+ *    in the parameter. 
+ * E.g. XPercent means the ```left``` value of ```oMyPlane``` w/ respect to ```oPlaneGame```'s width
+ *         and note that XPercent of 100% means ```left: 260px```
+ *       ... note that YPercent of 100% means ```Top: 480px``` 
+ */
+this.oMyPlaneGotoPosition = function(XPercent, YPercent){
+	/* Convert percentage into pixel values */
+	let LeftValue = XPercent / 100 * (parseInt(window.getComputedStyle(oPlaneGame).width)
+									 - parseInt(window.getComputedStyle(oMyPlane).width)
+								);
+	let TopValue = YPercent / 100  * (parseInt(window.getComputedStyle(oPlaneGame).height) 
+	  							- parseInt(window.getComputedStyle(oMyPlane).height)
+							  );
+	/* Debugging Begin*/
+	console.log(`LeftValue is ${LeftValue}, TopValue is ${TopValue}. `);
+	/* Debugging End */
+	oMyPlane.style.left = LeftValue + 'px';
+	oMyPlane.style.top = TopValue + 'px';
+}
 
 /**
  * Moves the bomber horizontally by ```XDelta``` pixels

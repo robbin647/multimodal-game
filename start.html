@@ -46,9 +46,22 @@
 		//让小飞机开火，小飞机默认初始时不开火
 		api.StartFire();
 
-		//小飞机上下左右移动
-		api.BomberMovesUpBy(200);
-		api.BomberMovesRightBy(30);
+		//利用percentage设置小飞机的位置
+		var t1 = setInterval(() => {
+		api.SetBomberPosition(50, 50);
+		}, 1000);
+
+		var t3 = setTimeout( () => {
+			clearInterval(t1)
+		}, 5000);
+
+		var t2 = setInterval(() => {
+			api.SetBomberPosition(20, 80)
+		}, 1000);
+
+		var t4 = setTimeout( () => {
+			clearInterval(t2);
+		}, 8000);
 				 
 	</script>
 </html>

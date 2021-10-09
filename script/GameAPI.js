@@ -22,6 +22,7 @@ class Bomber{
         // Describes how far the bomber moves to left/right/up/down at a time
         this.#HorizontalDelta = 20;
         this.#VerticalDelta = 20;
+        
     }
 
     EnableCursorControl(){
@@ -54,6 +55,12 @@ class Bomber{
 
     MoveDown(){
         this.#oMyPlaneMovesVertical(this.#VerticalDelta);
+    }
+
+    SetPositionByPercent(XPercent, YPercent){
+        if (XPercent >= 0 && XPercent <= 100)
+            if (YPercent >= 0 && YPercent <= 100)
+                MyGame.oMyPlaneGotoPosition(XPercent, YPercent);
     }
 }
 
@@ -179,11 +186,12 @@ export default class GameAPI {
         // 1.0 背景变动
         MyGame.bgMove();
 
-        //1.1 允许鼠标操控小飞机
-        //MyGame.BomberControlledByCursor();
+        //1.1 允许鼠标操控小飞机  
+        //已经移到GameAPI.AllowCursorControlOnBomber方法中
+        
 
         // //1.2创建敌机 
-        MyGame.enemyCreate();
+        //MyGame.enemyCreate();
 
         //2.0飞机与飞机之间的碰撞检测
         var DetectCrash = setInterval(() => {
@@ -194,19 +202,6 @@ export default class GameAPI {
 
         //3.0实时显示分数 
 	    MyGame.displayScore();
-
-        /* //禁止鼠标操控小飞机
-		this.#Bomber.DisableCursorControl();
-
-		//设置导弹的产生速率，单位：每秒多少个导弹
-		this.#BulletController.SetSpeed(100);
-
-		//让小飞机开火，小飞机默认初始时不开火
-		this.#BulletController.Fire();
-
-		//小飞机上下左右移动
-		this.#Bomber.SetVerticalDelta(200); this.#Bomber.MoveUp();
-        this.#Bomber.SetHorizontalDelta(30); this.#Bomber.MoveLeft(); */
 
     }
 
@@ -221,6 +216,7 @@ export default class GameAPI {
     BomberMovesDownBy = (distance) => {this.#Bomber.SetVerticalDelta(distance); this.#Bomber.MoveDown();}
     BomberMovesLeftBy = (distance) => {this.#Bomber.SetHorizontalDelta(distance);this.#Bomber.MoveLeft();}
     BomberMovesRightBy = (distance) => {this.#Bomber.SetHorizontalDelta(distance); this.#Bomber.MoveRight();}
+    SetBomberPosition = (XPercent, YPercent) => {this.#Bomber.SetPositionByPercent(XPercent, YPercent);}
 }
 
 

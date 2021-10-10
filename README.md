@@ -1,13 +1,13 @@
 # Game of Bombers
 
 
-## GameAPI (v.2)
+## GameAPI (v.3)
 
-GameAPI (2nd release) comes up!
+The latest version (v.3) is released.
 
 Since there are quite a few bugs in the original game, Robbin tried hard to develop this API while fixing the bugs at the same time. And he decided to deliver the GameAPI in several releases.
 
-The 2nd release gives you these functions:
+The 3rd release gives you these functions:
 
 + ```GameAPI.StartGame(): void```  
  Start the bomber game.
@@ -24,17 +24,22 @@ The 2nd release gives you these functions:
 + ```GameAPI.AllowCursorControlOnBomber(IsAllow: Boolean): void```
   This controls whether the bomber can be controlled by mouse cursor (the original game feature).
 
-+ ```GameAPI.BomberMovesUpBy(distance: Number): void```
++ ```GameAPI.BomberMovesUpBy(distance: Number): void```  
   Makes the bomber move up by a certain ```distance``` (unit: pixel).
 
-+ ```GameAPI.BomberMovesDownBy(distance: Number): void```
++ ```GameAPI.BomberMovesDownBy(distance: Number): void```  
   Similar to ```GameAPI.BomberMovesUpBy()```.
 
-+ ```GameAPI.BomberMovesLeftBy(distance: Number): void```
++ ```GameAPI.BomberMovesLeftBy(distance: Number): void```  
   Similar to ```GameAPI.BomberMovesUpBy()```.
 
-+ ```GameAPI.BomberMovesRightBy(distance: Number): void```
++ ```GameAPI.BomberMovesRightBy(distance: Number): void```  
   Similar to ```GameAPI.BomberMovesUpBy()```.
+
++ ```GameAPI.SetBomberPosition(XPercent: Number, YPercent: Number): void```  
+  Use the two percentage values to set the bomber's position on the game board. ```XPercent``` is the proportion of the distance between bomber's **left** boarder and the game board's **left** boarder, with respect to the full horizontal range of the bomber (=260px). ```YPercent``` is the proportion of the distance between bomber's **top** boarder and the game board's **top** boarder, with respect to the full vertical range of the bomber (=480px). 
+
+<img alt="Sketch explaining the bomber position by percentage" src="./images/doc/BomberPos_Explained.gif" width="500px" height="500px">
 
 ## Extra Note: 
   > **How to Import Javascript Module from external javascript file into ```<script>``` tag of HTML file?**

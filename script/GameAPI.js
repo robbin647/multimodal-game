@@ -4,8 +4,13 @@
  */
 
 import PlaneGame from './index7.0.js';
+import LaserBeam from './LaserBeam.js';
 
-const MyGame = new PlaneGame();
+export const MyGame = new PlaneGame();
+
+/* Debugging Begin */
+const Laser = new LaserBeam();
+/* Debugging End */
 
 class Bomber{ 
     /* Declaring private fields */
@@ -65,12 +70,18 @@ class Bomber{
 }
 
 const BulletNTimer = class {
+    #Bullet;
+    #TimerID;
     constructor(Bullet, TimerID) {
         this.Bullet = Bullet;
         this.TimerID = TimerID;
     }
     GetBullet = ()=> (this.Bullet);
     GetTimerID = ()=> (this.TimerID);
+    
+    /* Debugging Begin*/
+    StopBulletMove = () => {clearInterval(this.TimerID);};
+    /* Debugging End*/
 }
 
 class BulletController{
@@ -165,6 +176,12 @@ class BulletController{
         }
     }
 
+    /* Debugging Begin */
+    StopBullet(){
+
+    }
+    /* Debugging End */
+
 }
 
 export default class GameAPI {
@@ -184,7 +201,7 @@ export default class GameAPI {
     
     StartGame = () => {
         // 1.0 背景变动
-        MyGame.bgMove();
+        //MyGame.bgMove();
 
         //1.1 允许鼠标操控小飞机  
         //已经移到GameAPI.AllowCursorControlOnBomber方法中
@@ -203,6 +220,15 @@ export default class GameAPI {
         //3.0实时显示分数 
 	    MyGame.displayScore();
 
+        /* Debugging Begin */
+
+        Laser.FireLaserBeam(MyGame.oMyPlane);
+
+        var timer = setTimeout(
+                       () => {Laser.StopLaserBeam(MyGame.oMyPlane)}
+                       , 5000);
+        
+        /* Debugging End */
     }
 
     /*      Bullet Features     */

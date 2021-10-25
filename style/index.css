@@ -44,6 +44,19 @@ a{
 	left : 30px; 
 	/*border:1px solid red; */
 }
+
+/* Laser beam styles */
+.laser-beam{
+	padding: 0px;
+	margin: 0px;
+	position: absolute;
+	background-repeat: repeat-y;
+	border-radius: 15px;
+	width: 40px;
+	height: 480px;
+	display: block;
+}
+
 /*3.2.3敌机随机出现*/
 .enemyXiao,.enemyZhong1,.enemyZhong2,.enemyDa{
 	position :absolute;

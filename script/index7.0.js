@@ -3,7 +3,13 @@ export default function PlaneGame(){
 var oPlaneGame = document.getElementById("planeGame");
 var bgArr = ["bg1.jpg","bg2.jpg","bg3.jpg","bg4.jpg","bg5.jpg"];
 //玩家的飞机 
+//var oMyPlane = document.getElementById("myPlane");
+
+/* Debugging */
 var oMyPlane = document.getElementById("myPlane");
+this.oMyPlane= oMyPlane;
+
+
 //弹出框 
 var oRelAlert = document.getElementById("relAlert");
 //左上角分数 
@@ -103,6 +109,7 @@ function oMyPlaneMove(event){ //event is a MouseEvent
 /**
  * This function makes bomber to follow the cursor's movement
  * No parameter required
+ * @param isEnableControl {boolean} : to enable cursor control or not
  * @return void; 
  */
 this.BomberControlledByCursor = function(IsEnableControl){
@@ -119,6 +126,9 @@ this.BomberControlledByCursor = function(IsEnableControl){
 /**
  * Set the position of ```oMyPlane``` by the two percentages
  *    in the parameter. 
+ * @param XPercent {float}: used to set the ```left``` value
+ * @param YPercent {float}: used to set the ```top``` value
+ * @return {void}
  * E.g. XPercent means the ```left``` value of ```oMyPlane``` w/ respect to ```oPlaneGame```'s width
  *         and note that XPercent of 100% means ```left: 260px```
  *       ... note that YPercent of 100% means ```Top: 480px``` 
@@ -179,7 +189,8 @@ this.oMyPlaneMovesVertical = function(YDelta){
 }
 
 //1.2.1,玩家飞机发出导弹函数
-/* function bulletsMove(){
+/*
+function bulletsMove(){
 	//创建节点 
 	var  bullet = document.createElement("div");
 	bullet.className = "bullet";
@@ -198,12 +209,14 @@ this.oMyPlaneMovesVertical = function(YDelta){
 	myBulletH = getLinkHeight(bullet);
 	myBulletW = getLinkWidth(bullet);
 	myBulletL = getLinkLeft(bullet);
-} */
-
+} 
+*/
 
 ////1.2.1,产生导弹实例
 /**
- * @return HTMLElement: the reference to a bullet element
+ * Create a new Bullet HTMLElement and add it to ```oMyPlane```
+ * No parameter required 
+ * @return {HTMLElement} : the reference to a bullet element
  */
 this.CreateBullet = function(){
 	//创建节点 
@@ -248,6 +261,11 @@ this.ClearBullet = function(Bullet, TimerID){
 }
 //1.2.2敌机随机出现(数量随机、种类随机、位置随机、速度随机) 
 //随机创建敌机函数
+/**
+ * Create an enemy plane HTMLElement, and set a timer for it to move constantly
+ * @param type {Number}: determines which type of enemy plane to create {enemyXiao, enemyZhong1, enemyZhong2, enemyDa}
+ * @reutrn {void}
+ */
 const enemyPlanes = function(type){
 	var enemyClass = ["enemyXiao","enemyZhong1","enemyZhong2","enemyDa"];
 	var enemyType = ["xiaofeiji.png","xiaozhong.png","zhong.png","dafeiji.png"];

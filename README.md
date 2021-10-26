@@ -1,13 +1,15 @@
 # Game of Bombers
 
 
-## GameAPI (v.3)
+## GameAPI (v.4 BETA)
 
-The latest version (v.3) is released.
+The GameAPI v.4 is released.
+
+> WARNING: this is still BETA version since there are still bugs in the game. But you can start to use the new feature (i.e. the laser beam). Robbin will try to debug by Oct 29.
 
 Since there are quite a few bugs in the original game, Robbin tried hard to develop this API while fixing the bugs at the same time. And he decided to deliver the GameAPI in several releases.
 
-The 3rd release gives you these functions:
+The v.4 BETA gives you these functions:
 
 + ```GameAPI.StartGame(): void```  
  Start the bomber game.
@@ -39,7 +41,10 @@ The 3rd release gives you these functions:
 + ```GameAPI.SetBomberPosition(XPercent: Number, YPercent: Number): void```  
   Use the two percentage values to set the bomber's position on the game board. ```XPercent``` is the proportion of the distance between bomber's **left** boarder and the game board's **left** boarder, with respect to the full horizontal range of the bomber (=260px). ```YPercent``` is the proportion of the distance between bomber's **top** boarder and the game board's **top** boarder, with respect to the full vertical range of the bomber (=480px). 
 
-<img alt="Sketch explaining the bomber position by percentage" src="./images/doc/BomberPos_Explained.gif" width="500px" height="500px">
+<img alt="Sketch explaining the bomber position by percentage" src="./images/doc/BomberPos_Explained.gif" width="500px" height="500px">  
+
++ ```GameAPI.BomberFiresLaser(IsFireLaser: Boolean): void```  
+  This method controls the bomber to start or stop firing laser beam. For example, by passing the parameter ```IsFireLaser``` as ```true```, you enable the bomber to fire laser.
 
 ## Extra Note: 
   > **How to Import Javascript Module from external javascript file into ```<script>``` tag of HTML file?**

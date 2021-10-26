@@ -38,30 +38,22 @@
 		api.StartGame();
 
 		//禁止鼠标操控小飞机
-		api.AllowCursorControlOnBomber(false);
+		api.AllowCursorControlOnBomber(true);
 
 		//设置导弹的产生速率，单位：每秒多少个导弹
 		api.SetBulletSpeed(100);
 
 		//让小飞机开火，小飞机默认初始时不开火
-		//api.StartFire();
+		api.StartFire();
 
-		//利用percentage设置小飞机的位置
-		var t1 = setInterval(() => {
-		api.SetBomberPosition(50, 50);
-		}, 1000);
+		//让小飞机开始发射镭射光
+        api.BomberFiresLaser(true);
 
-		var t3 = setTimeout( () => {
-			clearInterval(t1)
-		}, 5000);
+		//默认4000毫秒后让小飞机停止发射镭射光
+        var timer = setTimeout(
+                       () => {api.BomberFiresLaser(false);}
+                       , 4000);
 
-		var t2 = setInterval(() => {
-			api.SetBomberPosition(20, 80)
-		}, 1000);
-
-		var t4 = setTimeout( () => {
-			clearInterval(t2);
-		}, 8000);
 				 
 	</script>
 </html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>Game of Bombers</title>
+		<link rel="stylesheet" href="style/index.css"></link>
+	</head>
+	<body>
+		<!-- Advice: You can show HTML tags as plain text in HTML on a website or webpage by replacing < with &lt; or &60; 
+			and > with &gt; or &62; on each HTML tag that you want to be visible.-->
+		<audio src="music/sin2.mp3" loop="loop">Sorry. But your browser does not support &lt audio &gt tag.</audio>
+        <div class='wrapper'>
+            <!-- <h1 id='gameName'>Bomber Game</h1> -->
+            
+            <div class='container'>
+                <div><img id='logo' src="images/own/Logo.png" ></div>
+                <div class='instruction'>
+                    <h2>HOW TO PLAY</h2>
+                    <br>
+                    <h3>GAMEPLAY</h3>
+                    <ul>
+                        <li>Move your head in front of camera to navigate your plane.</li>
+                        <li>Shout or yell or scream to fire bullets or even invoke more powerful weapons. See what you'll get.</li>
+                        <li>Move the cursor to click buttons.</li>
+                    </ul>
+                    <br>
+                    <h3>GOAL</h3>
+                    <ul>
+                        <li>Destroy enemies as many as possible.</li>
+                        <li>Prevent enemies from passing through your fortification line.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <img id='planeButton' src="images/own/own.png" onclick='start()' title="Start Game"></div>
+        </div>
+        <script>
+            var plane=document.getElementById('planeButton');
+            function start(){
+                var index=10;
+                setInterval(getMove,10,-index);
+            }
+
+            function getMove(index){
+                var a=window.getComputedStyle(plane,null).top;
+                a=parseInt(a);
+                plane.style.top=a+index+'px';
+            }
+        </script>
+	</body>
+	<script type="module" src="./script/index7.0.js"></script>
+	<script type="module" src="./script/GameAPI.js"></script>
+	<script type="module">
+		import GameAPI from './script/GameAPI.js';
+
+		//创建一个GameAPI实例
+		const api = new GameAPI();
+
+		//让GameAPI启动游戏
+		api.StartGame();
+
+		//禁止鼠标操控小飞机
+		api.AllowCursorControlOnBomber(false);
+
+		//设置导弹的产生速率，单位：每秒多少个导弹
+		api.SetBulletSpeed(100);
+
+		//让小飞机开火，小飞机默认初始时不开火
+		api.StartFire();
+
+		//利用percentage设置小飞机的位置
+		var t1 = setInterval(() => {
+		api.SetBomberPosition(50, 50);
+		}, 1000);
+
+		var t3 = setTimeout( () => {
+			clearInterval(t1)
+		}, 5000);
+
+		var t2 = setInterval(() => {
+			api.SetBomberPosition(20, 80)
+		}, 1000);
+
+		var t4 = setTimeout( () => {
+			clearInterval(t2);
+		}, 8000);	 
+	</script>
+    <style>
+        html {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-image: url("images/own/sky.png")  ;
+        }
+
+        body{
+            font-family: 'Poppins',sans-serif;
+            font-size: 20px;
+        }
+
+        .container{
+            position: absolute;
+            top:0;
+            left:0;
+            width: 40%;
+            min-width: 400px;
+        }
+
+        .instruction{
+            background-color: rgba(135, 197, 238, 0.5);
+            margin: -130px 30px;
+            border: #06A0E6 10px;
+            border-style: double;
+            padding: 35px;
+            color: white;
+        }
+
+        #logo{
+            margin-top: -100px;
+            margin-left: auto;
+            height: 400px;
+            width: 400px;
+        }
+
+        .instruction h2 {
+            color: #f5a237;
+            text-align: center;
+        }
+
+        .instruction h3 {
+            color: #f5a237;
+        }
+
+        ul{
+	        list-style-type:circle;
+        }
+
+        ul li{
+            padding: 5px;
+        }
+        
+        #planeButton{
+            position: absolute;
+            right: 20%;
+            bottom: 0;
+            width:120px;
+            height:160px;
+            background-size: contain;
+            float: right;
+        }
+    </style>
+</html>

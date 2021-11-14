@@ -1,0 +1,50 @@
+html {
+    background-size: cover;
+    background-image: url("../images/own/sky.png")  ;
+}
+
+.instruction{
+    width: 30%;
+    min-width: 400px;
+    background-color: rgba(135, 197, 238, 0.5);
+    margin-left: 600px;
+    margin-top: 200px;
+    border: #06A0E6 10px;
+    border-style: double;
+    padding: 35px;
+    color: white;
+}
+
+.instruction h2 {
+    color: #f5a237;
+    text-align: center;
+}
+
+.instruction h3 {
+    color: #f5a237;
+}
+
+ul{
+    list-style-type:circle;
+}
+
+ul li{
+    padding: 5px;
+}
+
+.buttonWrapper{
+    margin-right: 40px;
+    background-color: #66a18f;
+    float: right;
+}
+
+.btn{
+    line-height: 50px;
+    height: 50px;
+    text-align: center;
+    width: 100px;
+    cursor: pointer;
+    color: #FFF;
+    transition: all 0.5s;
+    position: relative;
+}

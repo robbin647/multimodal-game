@@ -4,27 +4,28 @@
 		<meta charset="utf-8"/>
 		<title>Game of Bombers</title>
 		<link rel="stylesheet" href="style/index.css"></link>
-        <link rel="stylesheet" href="style/gameOverPage.css"></link>
+        <link rel="stylesheet" href="style/startGamePage.css"></link>
 	</head>
 	<body>
 		<!-- Advice: You can show HTML tags as plain text in HTML on a website or webpage by replacing < with &lt; or &60; 
 			and > with &gt; or &62; on each HTML tag that you want to be visible.-->
 		<audio src="music/sin2.mp3" loop="loop">Sorry. But your browser does not support &lt audio &gt tag.</audio>
         <div class='wrapper'>
+
+            <img id='plane' src="images/own/plane.png"  title="Plane"></div>
             
             <div class='container'>
-                <h1 id='title'>GAME OVER</h1>
-                <br>
-                <h2 id='score'>500</h2>
+                <div><img id='logo' src="images/own/Logo.png" ></div>
                 <div class='buttonContainer'>
                     <div class="buttonWrapper">
-                        <p class='btn' onclick="javascript:window.location='./startGamePage.html'">MAIN MENU</p>
+                        <div class='btn' onclick="javascript:window.location='./start.html'">START</div>
                     </div>
                     <div class="buttonWrapper">
-                        <p class='btn' onclick="javascript:window.location='./start.html'">RESTART</p>
+                        <div class='btn' onclick="javascript:window.location='./instructionPage.html'">HOW TO PLAY</div>
                     </div>
                 </div>
             </div>
+
         </div>
 	</body>
 </html>

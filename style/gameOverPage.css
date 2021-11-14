@@ -1,0 +1,30 @@
+html {
+    background-size: cover;
+    background-image: url("../images/own/sky.png")  ;
+}
+
+.container{
+    position: absolute;
+    top:40%;
+    left: 33%;
+    text-align: center;
+}
+
+#title {
+    color: #f5a237;
+}
+
+#score {
+    color: black;
+}
+
+.buttonContainer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.buttonWrapper{
+    background-color: #66a18f;
+    margin: 5px;
+}

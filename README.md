@@ -1,15 +1,13 @@
 # Game of Bombers
 
 
-## GameAPI (v.4 BETA)
+## GameAPI (v.4)
 
 The GameAPI v.4 is released.
 
-> WARNING: this is still BETA version since there are still bugs in the game. But you can start to use the new feature (i.e. the laser beam). Robbin will try to debug by Oct 29.
-
 Since there are quite a few bugs in the original game, Robbin tried hard to develop this API while fixing the bugs at the same time. And he decided to deliver the GameAPI in several releases.
 
-The v.4 BETA gives you these functions:
+The v.4 gives you these functions:
 
 + ```GameAPI.StartGame(): void```  
  Start the bomber game.
@@ -47,7 +45,7 @@ The v.4 BETA gives you these functions:
   This method controls the bomber to start or stop firing laser beam. For example, by passing the parameter ```IsFireLaser``` as ```true```, you enable the bomber to fire laser.
 
 ## Extra Note: 
-  > **How to Import Javascript Module from external javascript file into ```<script>``` tag of HTML file?**
+  > **Q: How to import JavaScript modules from external javascript file into ```<script>``` tag of HTML file?**
  
   > Ans: add ```type="module"``` to script tag. it will work. See [StackOverflow](https://stackoverflow.com/questions/62783429/how-to-import-javascript-module-from-external-javascript-file-into-script-tag).
   
@@ -57,15 +55,18 @@ The v.4 BETA gives you these functions:
      import JSZip from '../node_modules/jszip/dist/jszip.min.js';
   </script>
   ```
+
+  > **Q: I have a ```.js``` file. How do I import an external JavaScript module in this file?**
  
-  > **I download a copy of this repo. But the browser reports an error loading JS modules and cannot load the game. What's wrong?**  
+  > Ans: First you need to transform your ```.js``` file into a JavaScrpit module. Check out [this MDN link](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) for JS module syntax. Then after you turn your ```.js``` file into a JS module, you can use the import statement ```import {...} from <path to your JavaScript module file>```, where inside ```{...}``` you should list out all functions, classes, etc., that you would like to import and use in your own ```.js``` file. For your quick understanding, you make also check out [this YouTube video](https://www.youtube.com/watch?v=s9kNndJLOjg). 
+ 
+  > **Q: I download a copy from this repo. But the browser reports an error loading JS modules saying "Access to script ... from origin 'null' has been blocked by CORS policy...". What's wrong?**  
   
-  > Ans: You may try to put the whole repo on a Web Server so that all files come from the same origin. Loading JS module files from local file system is currently banned due to security concerns.
+  > Ans: Loading JS module files from local file system is currently banned due to security concerns. You may try to put the whole repo on a Web Server so that all files come from the same origin. 
  
-  > **How will we combine our JS code together?**
+  > **Q: How will we combine our JS code together?**
 
   > Ans: We will use [Webpack](https://webpack.js.org/guides/getting-started/).
- 
  
 
 ## Useful Information

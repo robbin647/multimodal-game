@@ -1,4 +1,5 @@
 /*一，基础样式***************************/
+/*
 *{
 	margin:0px;padding:0px;
 }
@@ -9,11 +10,20 @@ a{
 	text-decoration:none;
 	color:black;
 }
+*/
+.has-border{
+	border: 1px solid red;
+
+}
+.container{
+	max-width: 1200px;
+}
 /*二，通用样式***************************/
 /*三，特定样式***************************/
 /*3.1背景*/
 #planeGame{
-	width:320px;height:560px;
+	width:320px;
+	height:560px;
 	/*写在一起时变化 位置就会出错*/
 	/*background:url("../images/bj/bg1.jpg") no-repeat;*/
 	/*正确的写法*/
@@ -23,6 +33,7 @@ a{
 
 	margin:10px auto;
 	position: relative;
+
 	overflow:hidden;
 }
 /*3.2.1玩家的飞机*/
@@ -44,6 +55,19 @@ a{
 	left : 30px; 
 	/*border:1px solid red; */
 }
+
+/* Laser beam styles */
+.laser-beam{
+	padding: 0px;
+	margin: 0px;
+	position: absolute;
+	background-repeat: repeat-y;
+	border-radius: 15px;
+	width: 40px;
+	height: 480px;
+	display: block;
+}
+
 /*3.2.3敌机随机出现*/
 .enemyXiao,.enemyZhong1,.enemyZhong2,.enemyDa{
 	position :absolute;

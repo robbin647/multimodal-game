@@ -1,0 +1,16 @@
+To compile JSX syntax file into vanilla JavaScript file, you should use Babel.
+
+First, go to your project folder , and run:
+	$> npm init -y
+	$> npm install babel-cli@6 babel-preset-react-app@3
+	$> npm upgrade fsevents # if necessary
+
+And then run:
+	$> npx babel --watch <JSX Source Folder> --out-dir <Folder to put compiled JavaScript files> --presets react-app/prod
+    - Please be very careful about the spelling of the above command, otherwise babel will not be compiling coorrectly.
+
+This starts the Babel watcher, who will compiles all JSX source files into JavaScript files each time you made changes to your JSX file.
+
+=====================================
+Ref: https://reactjs.org/docs/add-react-to-a-website.html#add-jsx-to-a-project
+https://reactjs.org/docs/add-react-to-a-website.html#run-jsx-preprocessor

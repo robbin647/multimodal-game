@@ -3,7 +3,16 @@ export default function PlaneGame(){
 var oPlaneGame = document.getElementById("planeGame");
 var bgArr = ["bg1.jpg","bg2.jpg","bg3.jpg","bg4.jpg","bg5.jpg"];
 //玩家的飞机 
+//var oMyPlane = document.getElementById("myPlane");
+
+/* Debugging */
 var oMyPlane = document.getElementById("myPlane");
+// this.oMyPlane= oMyPlane;
+	// The image used for laser beam
+	// the path is relative to /start.html
+	const LaserSprite = 'images/own/wp1.png';
+
+
 //弹出框 
 var oRelAlert = document.getElementById("relAlert");
 //左上角分数 
@@ -103,6 +112,7 @@ function oMyPlaneMove(event){ //event is a MouseEvent
 /**
  * This function makes bomber to follow the cursor's movement
  * No parameter required
+ * @param isEnableControl {boolean} : to enable cursor control or not
  * @return void; 
  */
 this.BomberControlledByCursor = function(IsEnableControl){
@@ -119,6 +129,9 @@ this.BomberControlledByCursor = function(IsEnableControl){
 /**
  * Set the position of ```oMyPlane``` by the two percentages
  *    in the parameter. 
+ * @param XPercent {float}: used to set the ```left``` value
+ * @param YPercent {float}: used to set the ```top``` value
+ * @return {void}
  * E.g. XPercent means the ```left``` value of ```oMyPlane``` w/ respect to ```oPlaneGame```'s width
  *         and note that XPercent of 100% means ```left: 260px```
  *       ... note that YPercent of 100% means ```Top: 480px``` 
@@ -179,7 +192,8 @@ this.oMyPlaneMovesVertical = function(YDelta){
 }
 
 //1.2.1,玩家飞机发出导弹函数
-/* function bulletsMove(){
+/*
+function bulletsMove(){
 	//创建节点 
 	var  bullet = document.createElement("div");
 	bullet.className = "bullet";
@@ -198,12 +212,42 @@ this.oMyPlaneMovesVertical = function(YDelta){
 	myBulletH = getLinkHeight(bullet);
 	myBulletW = getLinkWidth(bullet);
 	myBulletL = getLinkLeft(bullet);
-} */
+} 
+*/
 
+/* LASER BEAM FUNCTIONS BEGIN */
+
+/**
+ * Controls the bomber to fire laser beam
+ * no parameter required
+ * @return HTMLElement: the reference to the Laser Beam element created
+ */
+ this.FireLaserBeam = function(){
+    var beam = document.createElement("div");
+    beam.className = "laser-beam";
+    beam.style.backgroundImage= `url(${LaserSprite})`;
+    beam.style.bottom = 85+"px";
+    beam.style.left = 10+"px";
+    oMyPlane.appendChild(beam);
+	return beam;
+}
+/**
+ * Stops the bomber for firing laser beam
+ * @param Beam {HTMLElement} the reference to Laser Beam element
+ * @return void
+ */
+this.StopLaserBeam = function(Beam){
+    //var beam = document.querySelector("#myPlane .laser-beam");
+    oMyPlane.removeChild(Beam);
+}
+
+/* LASER BEAM FUNCTIONS END */
 
 ////1.2.1,产生导弹实例
 /**
- * @return HTMLElement: the reference to a bullet element
+ * Create a new Bullet HTMLElement and add it to ```oMyPlane```
+ * No parameter required 
+ * @return {HTMLElement} : the reference to a bullet element
  */
 this.CreateBullet = function(){
 	//创建节点 
@@ -248,6 +292,11 @@ this.ClearBullet = function(Bullet, TimerID){
 }
 //1.2.2敌机随机出现(数量随机、种类随机、位置随机、速度随机) 
 //随机创建敌机函数
+/**
+ * Create an enemy plane HTMLElement, and set a timer for it to move constantly
+ * @param type {Number}: determines which type of enemy plane to create {enemyXiao, enemyZhong1, enemyZhong2, enemyDa}
+ * @reutrn {void}
+ */
 const enemyPlanes = function(type){
 	var enemyClass = ["enemyXiao","enemyZhong1","enemyZhong2","enemyDa"];
 	var enemyType = ["xiaofeiji.png","xiaozhong.png","zhong.png","dafeiji.png"];
@@ -385,7 +434,7 @@ var enemyOver = false;
 this.bulletPlanesCrash = function(){
 
 		myPlaneL = getLinkLeft(oMyPlane);
-		myBulletL = myPlaneL+30;
+		myBulletL = myPlaneL+30;  //bullet is set to "style.left=30" (relative to myPlane)
 		for (var i = 0; i < enemyArr.length; i++) {
 			if( 
 				(	
@@ -405,8 +454,36 @@ this.bulletPlanesCrash = function(){
 				enemyOver  = false;
 			}		
 		};
-		
-
+}
+/** 
+ * Collision detection: laser beam hit at least one enemy (if there is any).
+ * If hit, then the global variable {enemyOver} will be set to true.
+ * @param LaserBeam {HTMLElement} the reference to the Laser Beam element
+ * @return void 
+*/
+this.EnemyLaserCrash = function(LaserBeam){
+	var LBWidth = getLinkWidth(LaserBeam);
+	var laserBeamLeft = getLinkLeft(LaserBeam); // relative to myPlane element
+	var realLBLeft = getLinkLeft(oMyPlane) + laserBeamLeft; // updated value
+	var laserBeamBottom = getLinkBottom(LaserBeam); 
+	var realLBBottom = getLinkBottom(oMyPlane) + laserBeamBottom;
+	for (let i = 0; i < enemyArr.length; i++) {
+		if (
+			Math.abs(realLBLeft - getLinkLeft(enemyArr[i])) < Math.min(LBWidth, getLinkWidth(enemyArr[i]))
+		   &&
+		    realLBBottom < getLinkBottom(enemyArr[i]) 
+		)
+		{
+			enemyArr[i].style.backgroundImage = "url('images/crash/ownbz.png')";
+			enemyArr[i].style.backgroundSize = "cover";
+			enemyOver  = true;	
+		}
+		/* Below is bad logic: to be fixed*/
+		else{
+			enemyOver  = false;
+		}
+		/* Bad Logic Ends*/
+	}
 }
 //3.0实时显示分数
 this.displayScore = function(){

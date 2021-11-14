@@ -20,8 +20,8 @@
 			<div class="row">
 				<div class="col-sm-3 has-border">
 					<div class="row">
-						<div class="col-sm has-borde " style="width: 300px; height: 300px; overflow:auto">
-							<img alt="col1 row 1 "src="images/enemy/dafeiji.png" width="500px" height="300px"/>
+						<div class="col-sm has-border">
+							<img alt="col1 row 1 "src="images/enemy/dafeiji.png" width="300px" height="300px"/>
 						</div>
 					</div>
 					<div class="row has-border">
@@ -31,7 +31,7 @@
 					</div>
 				</div>
 				<div class="col-sm-6 has-border">
-					<div class="row justify-content-center">
+					<div class="row "> <!-- justify-content-center-->
 						<div id="planeGame">
 							<div id="myPlane"></div>
 							
@@ -81,10 +81,10 @@
 		api.SetBulletSpeed(100);
 
 		//让小飞机开火，小飞机默认初始时不开火
-		api.StartFire();
+		// api.StartFire();
 
 		//让小飞机开始发射镭射光
-        api.BomberFiresLaser(true);
+        // api.BomberFiresLaser(true);
 
 		//默认4000毫秒后让小飞机停止发射镭射光
         var timer = setTimeout(

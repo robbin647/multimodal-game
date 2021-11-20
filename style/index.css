@@ -118,19 +118,7 @@ a{
 	line-height:80px;
 	color:orange;
 }	
-#btn{
-	height:45px;
-	padding-top:20px;
-}
-#btn #btnStart{
-	display:block;
-	margin:0px auto;
-	width:82px;height:28px;
-	border:1px solid #808080;
-	text-align: center;
-	line-height: 28px;
-	border-radius:70px;
-}
+
 /*3.4左上角分数*/
 .scoreLT{
 	color:#ccc;
@@ -149,6 +137,73 @@ a{
 	z-index:1;
 	display:none;
 }
+
+html {
+    width: 100%;
+	height: 100%;
+    /* background-size: cover; */
+    /* background-image: url("../images/own/sky.png")  ; */
+	background-color: rgb(213, 215, 218);
+	overflow-y:hidden
+}
+
+body{
+	font-family: 'Poppins',sans-serif;
+	font-size: 20px;
+}
+
+/*style for buttons in pages*/
+.btn{
+	/* padding-top:20px; */
+	line-height: 50px;
+	height: 100%;
+	text-align: center;
+	width: 200px;
+	cursor: pointer;
+	color: #FFF;
+	transition: all 0.5s;
+	position: relative;
+	margin-block-start: 0em;
+    margin-block-end: 0em;
+	margin: auto;
+}
+
+.btn::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background-color: rgba(255,255,255,0.1);
+	transition: all 0.3s;
+}
+
+.btn:hover::before {
+	opacity: 0 ;
+	transform: scale(0.5,0.5);
+}
+
+.btn::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	opacity: 0;
+	transition: all 0.3s;
+	border: 1px solid rgba(255,255,255,0.5);
+	transform: scale(1.2,1.2);
+}
+
+.btn:hover::after {
+	opacity: 1;
+	transform: scale(1,1);
+}
+
 video, #output {
 	position: absolute;
 }

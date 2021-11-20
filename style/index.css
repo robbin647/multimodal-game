@@ -149,3 +149,6 @@ a{
 	z-index:1;
 	display:none;
 }
+video, #output {
+	position: absolute;
+}

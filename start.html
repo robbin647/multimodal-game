@@ -3,34 +3,73 @@
 	<head>
 		<meta charset="utf-8"/>
 		<title>Game of Bombers</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<link rel="stylesheet" href="style/index.css"></link>
 	</head>
 	<body>
 		<!-- Advice: You can show HTML tags as plain text in HTML on a website or webpage by replacing < with &lt; or &60; 
-			and > with &gt; or &62; on each HTML tag that you want to be visible.-->
+			and > with &gt; or &62; on each HTML tag that you want to be visible.
 		<audio src="music/sin2.mp3" loop="loop">Sorry. But your browser does not support &lt audio &gt tag.</audio>
-		<div id="planeGame">
-			<div id="myPlane"></div>
-			
-			<p class="scoreLT">Score:<span id="scoreLTPlay">0</span></p>
-			<div id="stop"></div>
-			<!-- 提示框 -->
-			<div id="relAlert">
-				<div id="head">
-					<p>Game Over!</p>
-				</div>
-				<div id="scoreIn">1000</div>
-				<div id="btn">
-					<a id="btnStart" href="index.html">Play again</a>
-				</div>
+		-->
+		<div class="container">
+			<div class="row">
+				<!-- React JS Begins-->
+				<div id="react-playground"></div>
+				<!-- React JS Ends-->
 			</div>
+			<div class="row">
+				<div class="col-sm-3 has-border">
+					<div class="row">
+						<div class="col-sm has-border">
+							<img alt="col1 row 1 "src="images/enemy/dafeiji.png" width="300px" height="300px"/>
+						</div>
+					</div>
+					<div class="row has-border">
+						<div class="col-sm has-border">
+							<div id='sketch-holder'>
+								<video id="video" playsinline style="transform: scaleX(-1);"></video>
+								<canvas id="output"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 has-border">
+					<div class="row "> <!-- justify-content-center-->
+						<div id="planeGame">
+							<div id="myPlane"></div>
+							
+							<p class="scoreLT">Score:<span id="scoreLTPlay">0</span></p>
+							<div id="stop"></div>
+							<!-- 提示框 -->
+							<div id="relAlert">
+								<div id="head">
+									<p>Game Over!</p>
+								</div>
+								<div id="scoreIn">1000</div>
+								<div id="btn">
+									<a id="btnStart" href="index.html">Play again</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 has-border">
+					<div class="row">
+						<div class="col-md has-border">
+							<img alt="col31 row 1" src="images/enemy/zhong.png" width="300px" height="500px"/>
+						</div>
+					</div>
+				</div>
+			
+			</div>
+
 		</div>
 	</body>
 	<script type="module" src="./script/index7.0.js"></script>
 	<script type="module" src="./script/GameAPI.js"></script>
+
 	<script type="module">
 		import GameAPI from './script/GameAPI.js';
-
 		//创建一个GameAPI实例
 		const api = new GameAPI();
 
@@ -38,30 +77,32 @@
 		api.StartGame();
 
 		//禁止鼠标操控小飞机
-		api.AllowCursorControlOnBomber(false);
+		api.AllowCursorControlOnBomber(true);
 
 		//设置导弹的产生速率，单位：每秒多少个导弹
 		api.SetBulletSpeed(100);
 
 		//让小飞机开火，小飞机默认初始时不开火
-		api.StartFire();
+		// api.StartFire();
 
-		//利用percentage设置小飞机的位置
-		var t1 = setInterval(() => {
-		api.SetBomberPosition(50, 50);
-		}, 1000);
+		//让小飞机开始发射镭射光
+        // api.BomberFiresLaser(true);
 
-		var t3 = setTimeout( () => {
-			clearInterval(t1)
-		}, 5000);
-
-		var t2 = setInterval(() => {
-			api.SetBomberPosition(20, 80)
-		}, 1000);
-
-		var t4 = setTimeout( () => {
-			clearInterval(t2);
-		}, 8000);
+		//默认4000毫秒后让小飞机停止发射镭射光
+        var timer = setTimeout(
+                       () => {api.BomberFiresLaser(false);}
+                       , 4000);
 				 
 	</script>
+	<!-- Load React Content
+	<script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+	<script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+	<script src="script/react-playground.js"></script>
+	 -->
+	 <!-- Enable Bootstrap4 -->
+	 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<!--face detection scripts-->
+	<script src="./script/faceDetection.js"></script>
 </html>

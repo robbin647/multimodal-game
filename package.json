@@ -1,0 +1,23 @@
+{
+  "name": "bombers",
+  "version": "0.4.0",
+  "description": "This project is a JavaScript based multimodal game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "multimodal",
+    "JavaScript",
+    "game"
+  ],
+  "author": "CS3483 T61 Group 6",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow-models/blazeface": "^0.0.7",
+    "@tensorflow/tfjs-converter": "^3.11.0",
+    "@tensorflow/tfjs-core": "^3.11.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-react-app": "^3.1.2"
+  }
+}

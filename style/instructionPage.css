@@ -1,0 +1,53 @@
+.instruction{
+    width: 30%;
+    min-width: 400px;
+    background-color: rgba(255,255,255, 0.3);
+    margin-left: 600px;
+    margin-top: 200px;
+    border: grey 10px;
+    border-style: double;
+    border-radius: 20px;
+    padding: 35px;
+    color: grey;
+}
+
+.instruction h2 {
+    color: #ff914d;
+    text-align: center;
+}
+
+.instruction h3 {
+    color: #ff914d;
+}
+
+ul{
+    list-style-type:circle;
+}
+
+ul li{
+    padding: 5px;
+}
+
+.buttonWrapper{
+    width: 200px;
+    margin-right: 300px;
+    /* background-color: #66a18f; */
+    float: right;
+}
+
+.btn{
+    height: 100px;
+    width: 100px;
+    cursor: pointer;
+    transition: all 0.5s;
+    position: relative;
+}
+
+#plane{
+    position: absolute;
+	/* float: left; */
+	margin-top: -100px;
+	width:572px;
+	height:1008;
+	background-size: contain;
+}

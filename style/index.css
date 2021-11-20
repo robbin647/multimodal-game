@@ -118,19 +118,7 @@ a{
 	line-height:80px;
 	color:orange;
 }	
-#btn{
-	height:45px;
-	padding-top:20px;
-}
-#btn #btnStart{
-	display:block;
-	margin:0px auto;
-	width:82px;height:28px;
-	border:1px solid #808080;
-	text-align: center;
-	line-height: 28px;
-	border-radius:70px;
-}
+
 /*3.4左上角分数*/
 .scoreLT{
 	color:#ccc;
@@ -151,10 +139,12 @@ a{
 }
 
 html {
-	width: 100%;
+    width: 100%;
 	height: 100%;
-	background-size: cover;
-	background-image: url("images/own/sky.png")  ;
+    /* background-size: cover; */
+    /* background-image: url("../images/own/sky.png")  ; */
+	background-color: rgb(213, 215, 218);
+	overflow-y:hidden
 }
 
 body{
@@ -164,14 +154,18 @@ body{
 
 /*style for buttons in pages*/
 .btn{
+	/* padding-top:20px; */
 	line-height: 50px;
-	height: 50px;
+	height: 100%;
 	text-align: center;
 	width: 200px;
 	cursor: pointer;
 	color: #FFF;
 	transition: all 0.5s;
 	position: relative;
+	margin-block-start: 0em;
+    margin-block-end: 0em;
+	margin: auto;
 }
 
 .btn::before {
@@ -208,14 +202,6 @@ body{
 .btn:hover::after {
 	opacity: 1;
 	transform: scale(1,1);
-}
-
-#plane{
-	float: left;
-	margin-top: -100px;
-	width:600px;
-	height:700px;
-	background-size: contain;
 }
 
 video, #output {

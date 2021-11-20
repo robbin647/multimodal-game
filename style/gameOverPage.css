@@ -1,8 +1,6 @@
 html {
     background-size: cover;
     /* background-image: url("../images/own/sky.png")  ; */
-    background-color: rgb(213, 215, 218);
-	overflow-y:hidden
 }
 
 .container{

@@ -34,7 +34,7 @@ a{
 	margin:10px auto;
 	position: relative;
 
-	overflow:hidden;
+	overflow: scroll;
 }
 /*3.2.1玩家的飞机*/
 #myPlane{

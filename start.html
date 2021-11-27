@@ -3,7 +3,8 @@
 	<head>
 		<meta charset="utf-8"/>
 		<title>Game of Bombers</title>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
+		<link rel="stylesheet" href="./extern/bootstrap.min.css"/ >
 		<link rel="stylesheet" href="style/index.css"></link>
 	</head>
 	<body>
@@ -57,6 +58,10 @@
 					<div class="row">
 						<div class="col-md has-border">
 							<img alt="col31 row 1" src="images/enemy/zhong.png" width="300px" height="500px"/>
+							<form>
+								<label for="SpeedSlider">Adjust speed</label><br/>
+								<input type="range" name="SpeedSlider" id="SpeedSlider" min="30" max="80"/>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -69,29 +74,81 @@
 	<script type="module" src="./script/GameAPI.js"></script>
 
 	<script type="module">
-		import GameAPI from './script/GameAPI.js';
+		import GameAPI from './script/GameAPI_new.js';
+
 		//创建一个GameAPI实例
 		const api = new GameAPI();
 
 		//让GameAPI启动游戏
 		api.StartGame();
 
-		//禁止鼠标操控小飞机
+		//允许鼠标操控小飞机
 		api.AllowCursorControlOnBomber(true);
 
 		//设置导弹的产生速率，单位：每秒多少个导弹
-		api.SetBulletSpeed(100);
+		api.SetBulletSpeed(33);
 
 		//让小飞机开火，小飞机默认初始时不开火
 		// api.StartFire();
+
+		document.addEventListener("keydown", (e) => {
+			// compatible with IE
+			var event = e || window.event;
+			if (e) {
+				if (event.key === "W" || event.key === "w"){
+					api.StartFire();
+					console.log("Keydown 'w'/'W' ");
+				}
+			}
+		});
+
+		document.addEventListener("keyup", (e) => {
+			// compatible with IE
+			var event = e || window.event;
+			if (e) {
+				if (event.key === "W" || event.key === "w"){
+					api.CeaseFire();
+					console.log("Keyup 'w'/'W' ");
+				}
+			}
+		})
+
+		document.addEventListener("keydown", (e) => {
+			// compatible with IE
+			var event = e || window.event;
+			if (e) {
+				if (event.key === "L" || event.key === "l"){
+					api.BomberFiresLaser(true);
+					console.log("Keydown 'l'/'L' ");
+				}
+			}
+		});
+
+		document.addEventListener("keyup", (e) => {
+			// compatible with IE
+			var event = e || window.event;
+			if (e) {
+				if (event.key === "L" || event.key === "l"){
+					api.BomberFiresLaser(false);
+					console.log("Keyup 'l'/'L' ");
+				}
+			}
+		})
+
+		// slider for setting bomber speed
+		var speedchoice = document.getElementById("SpeedSlider");
+		speedchoice.addEventListener("change", (e) => {
+			console.log("Bullet speed set: " + e.target.value);
+			api.SetBulletSpeed(e.target.value);
+		})
 
 		//让小飞机开始发射镭射光
         // api.BomberFiresLaser(true);
 
 		//默认4000毫秒后让小飞机停止发射镭射光
-        var timer = setTimeout(
+        /* var timer = setTimeout(
                        () => {api.BomberFiresLaser(false);}
-                       , 4000);
+                       , 4000); */
 				 
 	</script>
 	<!-- Load React Content
@@ -100,9 +157,20 @@
 	<script src="script/react-playground.js"></script>
 	 -->
 	 <!-- Enable Bootstrap4 -->
-	 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	 <scirpt src="./extern/jquery-3.3.1.slim.min.js"></scirpt>
+	 <scirpt src="./extern/popper.min.js"></scirpt>
+	 <scirpt src="./extern/bootstrap.min.js"></scirpt>
+
+	 <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-	<!--face detection scripts-->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
+	
+	<!--face detection scripts begin-->
+	
+	<!--Load tfjs.core from CDN <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>-->
+	<!-- Add the WASM backend to the global backend registry <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script>--> 
+	<!-- Add BlazeFace code <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script> -->
 	<script src="./script/faceDetection.js"></script>
+
+	<!-- face detection scripts end-->
 </html>

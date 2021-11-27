@@ -258,38 +258,172 @@ this.CreateBullet = function(){
 	return bullet;
 }
 ////1.2.2,让导弹实例周期性移动
+// /**
+//  * Let the bullet passed in to move periodically
+//  * @param Bullet {HTMLElement} the reference to the created Bullet element
+//  * @param Interval {Number} determines the time interval for Bullet to make a move (unit: ms)
+//  * @return {Number} the timer ID for the bullet movement
+//  */
+// this.BulletMove = function(Bullet, Interval){
+// 	var TimerBulletMove = setInterval(function fun(){
+// 		// the height of bullet image is 14px
+// 		Bullet.style.top = Bullet.offsetTop - 14 +"px";
+// 		 // if bullet is to fly out of game board
+// 		if(getLinkTop(Bullet) + getLinkTop(oMyPlane) <= 0){ 
+// 			// reset bullet's position to the head of bomber 
+// 			Bullet.style.top = -20+"px";
+// 		}
+// 		/* Debugging */
+// 		// if(end == true){clearTimeout(t);}
+// 	},Interval);
+// 	/* Don't need to push to TimerList, because we keep TimerID in a BulletNTimerID object in GameAPI*/
+// 	// TimerList.push(TimerBulletMove);
+// 	return TimerBulletMove;
+// }
+
 /**
- * Let the bullet passed in to move periodically
- * @param Bullet {HTMLElement} the reference to the created Bullet element
- * @param Interval {Number} determines the time interval for Bullet to make a move (unit: ms)
- * @return {Number} the timer ID for the bullet movement
+ * Move a bullet by 14px to top
+ * @param Bullet an HTMLElement
+ * @return void
  */
-this.BulletMove = function(Bullet, Interval){
-	var TimerBulletMove = setInterval(function fun(){
-		Bullet.style.top = Bullet.offsetTop - 14 +"px";
-		myBulletT = -parseInt(Bullet.style.top);
-		if(parseInt(Bullet.style.top) <= -460){
-			Bullet.style.top = -20+"px";
-		}
-		/* Debugging */
-		// if(end == true){clearTimeout(t);}
-	},Interval);
-	/* Don't need to push to TimerList, because we keep TimerID in a BulletNTimerID object in GameAPI*/
-	// TimerList.push(TimerBulletMove);
-	return TimerBulletMove;
+this.BulletMove = function(Bullet){
+	Bullet.style.top = Bullet.offsetTop - 14 +"px";
 }
-////1.2.3,清除导弹实例
-this.ClearBullet = function(Bullet, TimerID){
-	//TO DO: Given a bullet and its timer. Clear the Bullet from the screen
-	// and clear the timer
-	try{
-		oMyPlane.removeChild(Bullet);
-		clearInterval(TimerID);
-	}
-	catch (e){
+
+/**
+ * Determine if a bullet flies out of the game boundary
+ * @param Bullet an HTMLElement
+ * @return Boolean
+ */
+this.isBulletOutOfBoundary = function(Bullet){
+	return (getLinkTop(Bullet) + getLinkTop(oMyPlane) <= 0);
+}
+
+// ////1.2.3 Periodically detect if we need to remove a Bullet instance
+// /**
+//  * This function checks whether to remove a Bullet instance.
+//  * A Bullet instance is removed in the following scenarios:
+//  *   (1) The Bullet flies out of the gameboard region
+//  *   (2) The Bullet hits an enemy plane and explodes
+//  * @param {HTMLElement} Bullet reference to the Bullet  
+//  * @param {Number} BulletMovingTimer the TimerID of the timer that 
+//  *                  lets Bullet moving periodically
+//  * @param {Function} ClearMyself a callback function to remove the timer to this function
+//  * @Note I know it's wired to remove a timer inside a function that itself is
+//  *       controlled by this timer. But it works. (Also see the timer for EnemyPlane) 
+//  */
+// this.CheckRemoval = function(Bullet, BulletMovingTimer, ClearMyself){
+// 	/* Helper function for checking */
+// 	let check = (Bullet) => {
+// 		let canRemove = false;
+// 		let bulletTop = getLinkTop(Bullet) + getLinkTop(oMyPlane);
+// 		let bulletLeft = getLinkLeft(Bullet) + getLinkLeft(oMyPlane);
+// 		let bulletRight = getLinkRight(Bullet) + getLinkRight(oMyPlane);
+// 		let bulletBottom = getLinkBottom(Bullet) + getLinkBottom(oMyPlane);
 		
-	}
+// 		// debug
+// 		console.log(`Bullet left:${bulletLeft}, bullet Top:${bulletTop}`);
+
+// 		// Check if scenario (1) happens
+// 		if (bulletTop < 0){
+// 			canRemove = true;
+// 		}
+
+// 		if (!canRemove){
+// 			// Check if scenario (2) happens
+// 			for (var i = 0; i < enemyArr.length; i++) {
+// 				let thisEnemy = enemyArr[i];
+// 				let thisEnemyTop = getLinkTop(thisEnemy);
+// 				let thisEnemyBottom = getLinkBottom(thisEnemy);
+// 				let thisEnemyLeft = getLinkLeft(thisEnemy);
+// 				let thisEnemyRight = getLinkRight(thisEnemy);
+				
+// 				if (
+// 					/* Collision condition */
+// 					(
+// 						/* (
+// 							bulletRight - thisEnemyLeft > 0 &&
+// 							bulletRight - thisEnemyLeft < getLinkWidth(thisEnemy)
+// 						) ||  
+// 						(
+// 						thisEnemyRight - bulletLeft > 0 &&
+// 						thisEnemyRight - bulletLeft < getLinkWidth(thisEnemy)
+// 						) */
+// 						bulletLeft - thisEnemyLeft > (-1) * getLinkWidth(Bullet)
+// 						&&
+// 						bulletLeft - thisEnemyLeft < getLinkWidth(thisEnemy)
+// 					) && 
+// 					(
+// 						/* (
+// 							bulletBottom - thisEnemyTop > 0 &&
+// 							bulletBottom - thisEnemyTop < getLinkHeight(thisEnemy)
+// 						) ||
+// 						(
+// 							thisEnemyBottom - bulletTop > 0 &&
+// 							thisEnemyBottom - bulletTop < getLinkHeight(thisEnemy)	
+// 						) */
+// 						bulletTop - thisEnemyTop > (-1) * getLinkHeight(Bullet)
+// 						&&
+// 						bulletTop - thisEnemyTop <  getLinkHeight(thisEnemy)
+// 					)
+// 				){
+// 					canRemove = true; 
+// 					thisEnemy.style.backgroundImage = "url('images/crash/ownbz.png')";
+// 					thisEnemy.style.backgroundSize = "cover";
+// 					enemyOver = true;	
+// 					break;
+// 				}
+// 			}
+// 		}
+// 		return canRemove;
+// 	}
+// 	var removalTimer = window.setInterval(() => {
+// 		var canRemove = check(Bullet);
+// 		if (canRemove){
+// 			oMyPlane.removeChild(Bullet);
+// 			window.clearInterval(BulletMovingTimer);
+// 			window.clearInterval(removalTimer);
+// 			ClearMyself(removalTimer);//call GameAPI.BulletNTimer to remove the timer to this function
+// 		}
+// 	}, 2000); // removal checking time is 500ms
+// 	return removalTimer;
+// }
+
+////1.2.4,清除导弹实例
+// this.ClearBullet = function(Bullet, TimerID){
+// 	//TO DO: Given a bullet and its timer. Clear the Bullet from the screen
+// 	// and clear the timer
+// 	try{
+// 		oMyPlane.removeChild(Bullet);
+// 		clearInterval(TimerID);
+// 	}
+// 	catch (e){
+		
+// 	}
+// }
+/**
+ * Removes a bullet from game board
+ * @param Bullet an HTMLElement
+ * @return void 
+ */
+this.ClearBullet = function(Bullet){
+	oMyPlane.removeChild(Bullet);
 }
+
+//// 1.2.5 Delaying clearing Bullet instance
+this.DelayingClearBullet = async function(Bullet, BulletMovingTimer){
+	return new Promise((resolve, reject) => {
+		let bulletOutOfBoundTimer = window.setInterval(()=>{
+			if (getLinkTop(Bullet) + getLinkTop(oMyPlane) <= 0){
+				oMyPlane.removeChild(Bullet);
+				clearInterval(BulletMovingTimer);
+				clearInterval(bulletOutOfBoundTimer);
+				resolve(true);
+			}
+		}, 10)
+	});
+}
+
 //1.2.2敌机随机出现(数量随机、种类随机、位置随机、速度随机) 
 //随机创建敌机函数
 /**
@@ -410,12 +544,14 @@ this.planesCrash= function(){
 			//游戏结束,玩家飞机被炸毁 
 			oMyPlane.style.backgroundImage = "url('images/crash/xzfjbz.png')";
 			oMyPlane.style.backgroundSize = "cover";
-			//可以再玩一次 
-			oRelAlert.style.display = "block";
-			oStop.style.display = "block";
+
+			window.location.assign("./gameOverPage.html?score="+scoreNum);
+			// //可以再玩一次 
+			// oRelAlert.style.display = "block";
+			// oStop.style.display = "block";
 			
-			//显示分数 
-			oScoreIn.innerHTML =  scoreNum;
+			// //显示分数 
+			// oScoreIn.innerHTML =  scoreNum;
 
 			/* Debugging: remove all timers when game over */ 
 			this.TimerList.map((_) => clearInterval(_));
@@ -430,12 +566,21 @@ this.planesCrash= function(){
 //分数 
 var scoreNum = 0;
 //敌机是否与导弹碰撞
-var enemyOver = false;
-this.bulletPlanesCrash = function(){
+// var enemyOver = false;
+/**
+ * Determine if a bullet collides with enemy planes (stored in enemyArr[] list)
+ * @param Bullet an HTMLElement
+ * @return Boolean
+ */
+this.bulletPlanesCrash = function(Bullet){
 
-		myPlaneL = getLinkLeft(oMyPlane);
-		myBulletL = myPlaneL+30;  //bullet is set to "style.left=30" (relative to myPlane)
-		for (var i = 0; i < enemyArr.length; i++) {
+	/* By default there is only ONE bullet, so it just uses myBulletL, myBulletT, etc.  */
+
+		var myBulletL = getLinkLeft(oMyPlane)+getLinkLeft(Bullet);  //bullet is set to "style.left=30" (relative to myPlane)
+		var myBulletT = getLinkTop(oMyPlane)+getLinkTop(Bullet);
+		var isCollide = false;  
+
+		for (var i = 0; i < enemyArr.length && isCollide === false; i++) {
 			if( 
 				(	
 					Math.abs(myBulletL-getLinkLeft(enemyArr[i]))< myBulletW||
@@ -448,12 +593,15 @@ this.bulletPlanesCrash = function(){
 			 ){
 			 	enemyArr[i].style.backgroundImage = "url('images/crash/ownbz.png')";
 			 	enemyArr[i].style.backgroundSize = "cover";
-			 	enemyOver  = true;	
+			 	// enemyOver  = true;
+				AddUserGrade(enemyArr[i]);
+				isCollide  = true;
 			}
 			else{
-				enemyOver  = false;
+				// enemyOver  = false;
 			}		
 		};
+		return isCollide;
 }
 /** 
  * Collision detection: laser beam hit at least one enemy (if there is any).
@@ -476,24 +624,42 @@ this.EnemyLaserCrash = function(LaserBeam){
 		{
 			enemyArr[i].style.backgroundImage = "url('images/crash/ownbz.png')";
 			enemyArr[i].style.backgroundSize = "cover";
-			enemyOver  = true;	
+			AddUserGrade(enemyArr[i]);
+			// enemyOver  = true;	
 		}
 		/* Below is bad logic: to be fixed*/
 		else{
-			enemyOver  = false;
+			// enemyOver  = false;
 		}
 		/* Bad Logic Ends*/
 	}
 }
+
+/**
+ * Add user's grade according to the type of enemy plane he shoots down
+ * @param Enemy
+ * @return void
+ */
+function AddUserGrade(Enemy){
+	// available enemy class: ["enemyXiao","enemyZhong1","enemyZhong2","enemyDa"];
+	switch (Enemy.className){
+		case "enemyXiao": scoreNum += 1; break;
+		case "enemyZhong1": scoreNum += 2; break;
+		case "enemyZhong2": scoreNum += 3; break;
+		case "enemyDa": scoreNum += 4; break;
+		default: break;
+	}
+}
+
 //3.0实时显示分数
 this.displayScore = function(){
 	var t =setInterval(function(){	
-		if(enemyOver  == true && end == false){
-			scoreNum ++;
-		}
+		// if(enemyOver  == true && end == false){
+		// 	scoreNum ++;
+		// }
 		oScoreLTPlay.innerHTML = scoreNum;
 		if(end == true){clearTimeout(t);}		
-	},1) 
+	},10) 
 	this.TimerList.push(t);
 }
 /*************************************三，js获取外部样式表属性的函数***************************************/
@@ -509,6 +675,9 @@ function getLinkLeft(object){
 function getLinkTop(object){
 	return parseInt(window.getComputedStyle ? window.getComputedStyle(object,false).top : object.currentStyle.top);
 } 
+function getLinkRight(object){
+	return parseInt(window.getComputedStyle ? window.getComputedStyle(object,false).right : object.currentStyle.right);
+}
 function getLinkBottom(object){
 	return parseInt(window.getComputedStyle ? window.getComputedStyle(object,false).bottom : object.currentStyle.bottom);
 }

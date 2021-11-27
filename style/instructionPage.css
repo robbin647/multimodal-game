@@ -3,11 +3,11 @@
     min-width: 400px;
     background-color: rgba(255,255,255, 0.3);
     margin-left: 600px;
-    margin-top: 200px;
+    margin-top: 0px;
     border: grey 10px;
     border-style: double;
     border-radius: 20px;
-    padding: 35px;
+    padding: 35px 0px;
     color: grey;
 }
 
@@ -46,8 +46,8 @@ ul li{
 #plane{
     position: absolute;
 	/* float: left; */
-	margin-top: -100px;
+	margin-top: 0px;
 	width:572px;
-	height:1008;
+	height:600px;
 	background-size: contain;
 }

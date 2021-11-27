@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>Game of Bombers</title>
+		<link rel="stylesheet" href="style/index.css"></link>
+        <link rel="stylesheet" href="style/gameOverPage.css"></link>
+	</head>
+	<body>
+		<!-- Advice: You can show HTML tags as plain text in HTML on a website or webpage by replacing < with &lt; or &60; 
+			and > with &gt; or &62; on each HTML tag that you want to be visible.-->
+		<audio src="music/sin2.mp3" loop="loop">Sorry. But your browser does not support &lt audio &gt tag.</audio>
+        <img id='plane1' src="images/own/plane.png"  title="Plane"></div>
+
+        <div class='container'>
+            <h1 id='title'>GAME OVER</h1>
+            <br>
+            <h2 id='score'></h2>
+            <div class='buttonContainer'>
+                <div class="buttonWrapper">
+                    <p class='btn' onclick="javascript:window.location='./startGamePage.html'">MAIN MENU</p>
+                </div>
+                <div class="buttonWrapper">
+                    <p class='btn' onclick="javascript:window.location='./start.html'">RESTART</p>
+                </div>
+            </div>
+        </div>
+
+        <img id='plane2' src="images/own/plane.png"  title="Plane"></div>
+        <script>
+            var query =  window.location.search.substring(1);
+            console.log("window.location.search is ", query);
+            var scoreNum = 0;
+            // get scoreNum from query string
+            var paramList = query.split("=");
+            for (let i =0; i < paramList.length; i++){
+                var name = paramList[i];
+                if (name === "score"){
+                    scoreNum = parseInt(paramList[i+1]);
+                }
+                i++;  // only search even index element because they are names
+            }
+            document.getElementById("score").innerHTML = scoreNum;
+
+        </script>
+	</body>
+</html>

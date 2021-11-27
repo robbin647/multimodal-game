@@ -1,11 +1,57 @@
 /*  
  * GameAPI by YANG Tianxia
- * Last update: Oct 27
+ * Last update: Nov 27
  */
 
 import PlaneGame from './index7.0.js';
 
 export const MyGame = new PlaneGame();
+
+/**
+ * Queue data structure 
+ * @apiNote available methods enqueue(), dequeue(), isEmpty(), forEach()
+ * 
+ */
+const Queue = class {
+    #_queue;   // the internal JS list
+    #size;
+
+    constructor(){
+        this.#_queue = [];
+        this.#size = 0;
+    }
+    /**
+     * @param item {Any}
+     * @return void
+     */
+    enqueue(item){
+        this.#_queue.push(item);
+        this.#size++;
+    }
+
+    /**
+     * @return Any
+     */
+    dequeue(){
+        let result = this.#_queue.shift();
+        this.#size--;
+        return result;
+    }
+    /**
+     * @return Boolean
+     */
+    isEmpty(){
+        return (this.#size == 0);
+    }
+
+    /**
+     * Wraps vanilla JS's Array.forEach((value, index, array) => Any)
+     * 
+     */
+    forEach(forEachFunction){
+        this.#_queue.forEach(forEachFunction);
+    }
+}
 
 const LaserBeam = class {
     // By default we only allow one laser beam at a time
@@ -128,19 +174,33 @@ class Bomber{
     }
 }
 
+/**
+ * 
+ * A data structure storing relevant info about a Bullet HTMLElement instance     
+ * 
+ * Fields: 
+ *   - Bullet: HTMLElement
+ *   - MovingID: the Timer ID for Bullet moving periodically
+ *   - RemovalID: the Timer ID for detecting the event that will cause
+ *       the removal of a bullet (i.e. bullet hits an enemy or 
+ *       bullet flies out of the gameboard) 
+ */
 const BulletNTimer = class {
     #Bullet;
-    #TimerID;
+    #MovingID;
+    // #RemovalID;
     constructor(Bullet, TimerID) {
         this.Bullet = Bullet;
         this.TimerID = TimerID;
+        // this.RemovalID = RemovalID;
     }
     GetBullet = ()=> (this.Bullet);
     GetTimerID = ()=> (this.TimerID);
+    // GetRemovalID = () => (this.RemovalID);
     
-    /* Debugging Begin*/
+    /* Debugging Begin */
     StopBulletMove = () => {clearInterval(this.TimerID);};
-    /* Debugging End*/
+    /* Debugging End  */
 }
 
 class BulletController{
@@ -148,13 +208,98 @@ class BulletController{
     #GenInterval;
     #IsFireEnabled;
     #AllBulletNTimers;
+    #AllBullets;
     #BulletEnemyCrashTimer;
+    #GenerateBulletTimer;
+    #BulletFireReqQue;
+    //#MainController;
+    #MainControllerCounter;
+    #MainControllerTimer;
+    //#UpdateMainController;
 
     constructor(){
         this.#GenInterval = 5; //Generation interval of single bullet, unit: millisecond 
         this.#IsFireEnabled = false;
         this.#AllBulletNTimers = [];  // a list of BulletNTimer unity 
+        this.#AllBullets = [];
         this.#BulletEnemyCrashTimer = null; 
+        this.#GenerateBulletTimer = null;
+        this.#BulletFireReqQue = new Queue();
+        this.#MainControllerCounter = 0;
+        this.#MainControllerTimer = window.setInterval(function(){this.#MainController();}.bind(this), 10);
+    }
+
+    /**
+     * Core logic 
+     */
+    #MainController(){
+        
+        // increment the time counter
+        this.#MainControllerCounter += 10;
+
+        // check if #IsFireEnabled is true
+        if (this.#IsFireEnabled){
+            // Only when an amount time of #GenInterval has elapsed,
+            // we create a new bullet instance
+            if (this.#MainControllerCounter % this.#GenInterval === 0){
+                var NewBullet = MyGame.CreateBullet();
+                this.#AllBullets.push(NewBullet);
+            }
+        }
+
+        // check if we should remove some bullets 
+        // bullets are removed in any of these cases:
+        //    (1) Bullet flies out of game boundary
+        //    (2) Bullet crashes with any enemy plane
+        var bulletsToRemove = [];
+        // (1)
+        // check if any bullet in #AllBullets list flies out of game boundary 
+        // if a bullet does so, it is removed from the gameboard and also #AllBulelts list
+        this.#AllBullets.forEach((value) => {
+            if (MyGame.isBulletOutOfBoundary(value) === true){
+                MyGame.ClearBullet(value);
+                bulletsToRemove.push(value);
+            }
+        });
+        // (2)
+        //check if any bullet in #AllBullets crashes with enemy planes
+        this.#AllBullets.forEach((value) => {
+            if (MyGame.bulletPlanesCrash(value) === true){
+                MyGame.ClearBullet(value);
+                bulletsToRemove.push(value);
+            }
+        })
+        this.#AllBullets = this.#AllBullets.filter((value) => {
+            if (value in bulletsToRemove) return false;
+            else return true;
+        });
+
+        // check if there's still bullets in #AllBullets list
+        // if there is, make each of these bullets move
+        this.#AllBullets.forEach((value)=>{
+            if (this.#MainControllerCounter % this.#GenInterval === 0){
+                MyGame.BulletMove(value);
+            }
+        });
+
+        // if #MainControllerTimer exceeds the #GenInterval, reset it to 0
+        if (this.#MainControllerCounter >= this.#GenInterval){
+            this.#MainControllerCounter = 0;
+        }
+
+    }
+
+    /**
+     * This method is called when the user changes the bullet speed i.e. #GenInterval 
+     * This method will:
+     *     (1) remove the old timer for #MainController 
+     *     (2) reset #MainControllerCounter to 0
+     *     (3) create a new timer for #MainController, store it in #MainControllerTimer 
+     */
+    #UpdateMainController(){
+        window.clearInterval(this.#MainControllerTimer);  //(1)
+        this.#MainControllerCounter = 0; //(2)
+        this.#MainControllerTimer = window.setInterval(function(){this.#MainController();}.bind(this), 10); //(3)
     }
 
     /**
@@ -164,7 +309,10 @@ class BulletController{
      */
     #SetGenInterval(value){
         if (value >0){
-            this.#GenInterval = value;
+            // due to the MainController(), we need to make sure
+            // #GenInterval is always a multiple of 10
+            this.#GenInterval = Math.floor(value / 10) * 10;
+            this.#UpdateMainController();
         }
     }
 
@@ -211,18 +359,10 @@ class BulletController{
      * @return void;
      */
     Fire(){
-        if (this.#IsFireEnabled == false){
-            this.#IsFireEnabled = true;
-            var NewBullet = MyGame.CreateBullet();
-            var NewTimerID = MyGame.BulletMove(NewBullet, this.GetGenInterval());
-            var NewBulletNTimer = new BulletNTimer(NewBullet, NewTimerID);
-            this.#AllBulletNTimers.push(NewBulletNTimer);
-            // set up the timer to detect bullet and enemy collision
-            this.#BulletEnemyCrashTimer = setInterval(() => {
-                MyGame.bulletPlanesCrash();
-            }, 50);
-            MyGame.TimerList.push(this.#BulletEnemyCrashTimer);
-        }    
+        /* Debug */
+        // this.#BulletFireReqQue.enqueue(1);
+        this.#IsFireEnabled = true;
+        /* Debug */
     }
 
     /**
@@ -231,24 +371,10 @@ class BulletController{
      * @return void;
      */
     CeaseFire(){
-        if (this.#IsFireEnabled == true){
-            this.#IsFireEnabled = false;
- 
-            //clear the list of BulletNTimer objects
-            while (this.#AllBulletNTimers.length > 0){
-                let _ = this.#AllBulletNTimers.pop();
-                MyGame.ClearBullet(_.GetBullet(), _.GetTimerID());
-            }
-
-            //clear the timer for bullet and enemy crash detection
-            clearInterval(this.#BulletEnemyCrashTimer);
-            //remove the timer from MyGame.TimerList 
-            var idx = MyGame.TimerList.indexOf(this.#BulletEnemyCrashTimer);
-            MyGame.TimerList = MyGame.TimerList.filter((value, index, array) => {
-                return (index != idx);
-            });
-
-        }
+        /* Debug */
+        // this.#BulletFireReqQue.dequeue();
+        this.#IsFireEnabled = false;
+        /* Debug */
     }
 
 }
@@ -301,8 +427,8 @@ export default class GameAPI {
         MyGame.TimerList.push(DetectBomberEnemyCrash);
 
         //2.1 Enemy and bullet collision detection
-        var DetectEnemyBulletCrash = 
-            MyGame.bulletPlanesCrash();
+        /* var DetectEnemyBulletCrash = 
+            MyGame.bulletPlanesCrash(); */
 
         //3.0实时显示分数 
 	    MyGame.displayScore();

@@ -216,3 +216,13 @@ body{
 video, #output {
 	position: absolute;
 }
+/* Style for Instruction text */
+.instruction {
+	font-size: 1em;
+}
+span.instruction-section{
+	font-size: 1em;
+}
+div.instruction-content{
+	font-size: 12px;
+}

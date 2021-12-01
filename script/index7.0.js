@@ -545,7 +545,9 @@ this.planesCrash= function(){
 			oMyPlane.style.backgroundImage = "url('images/crash/xzfjbz.png')";
 			oMyPlane.style.backgroundSize = "cover";
 
-			window.location.assign("./gameOverPage.html?score="+scoreNum);
+			/* Debugging */
+			// window.location.assign("./gameOverPage.html?score="+scoreNum);
+
 			// //可以再玩一次 
 			// oRelAlert.style.display = "block";
 			// oStop.style.display = "block";

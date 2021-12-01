@@ -19,5 +19,8 @@
     "@tensorflow/tfjs-core": "^3.11.0",
     "babel-cli": "^6.26.0",
     "babel-preset-react-app": "^3.1.2"
+  },
+  "devDependencies": {
+    "pushstate-server": "^3.1.0"
   }
 }

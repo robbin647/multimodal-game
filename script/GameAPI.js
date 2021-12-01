@@ -418,7 +418,7 @@ export default class GameAPI {
         
 
         // //1.2创建敌机 
-        MyGame.enemyCreate();
+        // MyGame.enemyCreate();
 
         //2.0飞机与飞机之间的碰撞检测
         var DetectBomberEnemyCrash = setInterval(() => {

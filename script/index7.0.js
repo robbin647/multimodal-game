@@ -1,61 +1,67 @@
 export default function PlaneGame(){
-//游戏界面 
+// Game Board 
 var oPlaneGame = document.getElementById("planeGame");
 var bgArr = ["bg1.jpg","bg2.jpg","bg3.jpg","bg4.jpg","bg5.jpg"];
-//玩家的飞机 
-//var oMyPlane = document.getElementById("myPlane");
 
-/* Debugging */
+// Bomber
 var oMyPlane = document.getElementById("myPlane");
-// this.oMyPlane= oMyPlane;
-	// The image used for laser beam
-	// the path is relative to /start.html
-	const LaserSprite = 'images/own/wp1.png';
+
+// The image used for laser beam
+const LaserSprite = 'images/own/wp1.png';  // the path is relative to /start.html
 
 
-//弹出框 
+//Game Over Popup (deprecated)
 var oRelAlert = document.getElementById("relAlert");
-//左上角分数 
+
+// User Score (always displayed on the top left corner of the game board) 
 var oScoreLTPlay = document.getElementById("scoreLTPlay");
-//结束时的分数
+
+// User Score (when game over)
 var oScoreIn = document.getElementById("scoreIn");
 var oStop = document.getElementById("stop");
-//碰撞检测使用***********
-//玩家飞机 
+
+// Bomber height, width, top and left 
 var myPlaneH = getLinkHeight(oMyPlane);
 var myPlaneW = getLinkWidth(oMyPlane);
 var myPlaneT = 0;
 var myPlaneL = 0;
-//敌机 
+
+// Enemy planes
 var enemyPlaneH = 0;  //Height
 var enemyPlaneW = 0;  //Width
 var enemyPlaneT = 0;  //Top
 var enemyPlaneL = 0;  //Left
 var enemyArr = new Array();
 var i =0;
-//玩家导弹 
+
+// Bullet height, width, top and left (deprecated)
 var myBulletH = 0;
 var myBulletW = 0;
 var myBulletT = 0;
 var myBulletL = 0;
-//是否结束 
+
+// Is game over
 var end = false;
 //global list to store all timers
 this.TimerList = [];
-/* Debugging 
-this.enemyPlanes = this.enemyPlanes.bind(this);
-*/
-/*************************************一，玩家飞机与敌机的创建***************************************/
-//1.0游戏界面滚动
+// User score
+var scoreNum = 0;
+
+/************************************* 1. Game Board Functions ***************************************/
+/**
+ * Enable Auto-moving of game board background
+ * No param required
+ * @return void  
+ */  
 var bgstep = 0;
 this.bgMove = function(){
 	var t = setInterval(function(){
 		bgstep += 2;
 		var bgstepLimit = 500;
 		var num = 0;
-		//滚动(兼容性1，火狐不支持backgroundPositionY) 
+		// Compatibility with Firefox  
 		oPlaneGame.style.backgroundPosition = "0px"+"  "+bgstep+"px";
-		//换背景 
+		// Switch to another bg image after some time interval 
 		if(bgstep >  bgstepLimit && bgstep <=  bgstepLimit*2){
 			num = 1;
 		}
@@ -78,7 +84,7 @@ this.bgMove = function(){
 	this.TimerList.push(t);
 	
 }
-/// 1.1：玩家飞机移动函数 - 鼠标操控
+
 /**
  * This is a helper function to ```oMyPlaneMove``` 
  * It retrieves the dynamic CSS style values of the HTMLElement "#planeGame"
@@ -88,7 +94,7 @@ this.bgMove = function(){
 function GetGameBoardCSSStyle(){
 	return window.getComputedStyle(oPlaneGame, false);
 }
-
+/************************************* 2. Bomber Functions ***************************************/
 /**
  * This function updates the position of ```oMyPlane```
  *   according to the cursor's position
@@ -97,12 +103,14 @@ function GetGameBoardCSSStyle(){
  */
 function oMyPlaneMove(event){ //event is a MouseEvent
 	this.style.cursor = "pointer";
-	//处理事件对象的兼容性
+	// Compatibility with Internet Explorer
 	var e = window.event || event;
 	var eX = e.pageX-472;  //pageX is the cursor's X-coordinate with respect to the current document
 	var eY = e.pageY-32;   //pageY is ibid.
 	//the values above are hard coded - 472 and 32 is the corrdinate of the left top corner of gameboard
-	//不超出边界
+	
+	// Set bomber position the same as mouse 
+	//    if the mouse does not move out of the game board (game board boundaries)
 	if((eY-40)>0 && (eY-40)<480 && (eX-33)>0 && (eX-33)<260){
 		oMyPlane.style.top = (eY-40)+"px";
 		oMyPlane.style.left = (eX-33)+"px";
@@ -111,7 +119,6 @@ function oMyPlaneMove(event){ //event is a MouseEvent
 
 /**
  * This function makes bomber to follow the cursor's movement
- * No parameter required
  * @param isEnableControl {boolean} : to enable cursor control or not
  * @return void; 
  */
@@ -153,8 +160,8 @@ this.oMyPlaneGotoPosition = function(XPercent, YPercent){
 
 /**
  * Moves the bomber horizontally by ```XDelta``` pixels
- * @param XDelta: Number; can be positive or negative value
- * @return void;
+ * @param XDelta Number, can be positive or negative value
+ * @return void
  */
 this.oMyPlaneMovesHorizontal = function(XDelta){
 	let MyPlaneLeft = getLinkLeft(oMyPlane); 
@@ -171,8 +178,8 @@ this.oMyPlaneMovesHorizontal = function(XDelta){
 }
 /**
  * Moves the bomber vertically by ```YDelta``` pixels
- * @param XDelta: Number; can be positive or negative value
- * @return {void};
+ * @param XDelta: Number, can be positive or negative value
+ * @return void
  */
 this.oMyPlaneMovesVertical = function(YDelta){
 	let MyPlaneBottom = getLinkBottom(oMyPlane);
@@ -190,32 +197,7 @@ this.oMyPlaneMovesVertical = function(YDelta){
 		oMyPlane.style.bottom = NewBottomValue + 'px';
 	}
 }
-
-//1.2.1,玩家飞机发出导弹函数
-/*
-function bulletsMove(){
-	//创建节点 
-	var  bullet = document.createElement("div");
-	bullet.className = "bullet";
-	bullet.style.bottom = 90+"px";
-	oMyPlane.appendChild(bullet);
-	//设置导弹定时移动 
-	var t = setInterval(function fun(){
-		bullet.style.top = bullet.offsetTop - 14 +"px";
-		myBulletT = -parseInt(bullet.style.top);
-		if(parseInt(bullet.style.top) <= -460){
-			bullet.style.top = -20+"px";
-		}
-		if(end == true){clearTimeout(t);}
-	},0);
-	TimerList.push(t);
-	myBulletH = getLinkHeight(bullet);
-	myBulletW = getLinkWidth(bullet);
-	myBulletL = getLinkLeft(bullet);
-} 
-*/
-
-/* LASER BEAM FUNCTIONS BEGIN */
+/************************************* 3. Laser Beam Functions ***************************************/
 
 /**
  * Controls the bomber to fire laser beam
@@ -241,9 +223,8 @@ this.StopLaserBeam = function(Beam){
     oMyPlane.removeChild(Beam);
 }
 
-/* LASER BEAM FUNCTIONS END */
+/************************************* 4. Bullet Functions ***************************************/
 
-////1.2.1,产生导弹实例
 /**
  * Create a new Bullet HTMLElement and add it to ```oMyPlane```
  * No parameter required 
@@ -257,29 +238,6 @@ this.CreateBullet = function(){
 	oMyPlane.appendChild(bullet);
 	return bullet;
 }
-////1.2.2,让导弹实例周期性移动
-// /**
-//  * Let the bullet passed in to move periodically
-//  * @param Bullet {HTMLElement} the reference to the created Bullet element
-//  * @param Interval {Number} determines the time interval for Bullet to make a move (unit: ms)
-//  * @return {Number} the timer ID for the bullet movement
-//  */
-// this.BulletMove = function(Bullet, Interval){
-// 	var TimerBulletMove = setInterval(function fun(){
-// 		// the height of bullet image is 14px
-// 		Bullet.style.top = Bullet.offsetTop - 14 +"px";
-// 		 // if bullet is to fly out of game board
-// 		if(getLinkTop(Bullet) + getLinkTop(oMyPlane) <= 0){ 
-// 			// reset bullet's position to the head of bomber 
-// 			Bullet.style.top = -20+"px";
-// 		}
-// 		/* Debugging */
-// 		// if(end == true){clearTimeout(t);}
-// 	},Interval);
-// 	/* Don't need to push to TimerList, because we keep TimerID in a BulletNTimerID object in GameAPI*/
-// 	// TimerList.push(TimerBulletMove);
-// 	return TimerBulletMove;
-// }
 
 /**
  * Move a bullet by 14px to top
@@ -298,109 +256,6 @@ this.BulletMove = function(Bullet){
 this.isBulletOutOfBoundary = function(Bullet){
 	return (getLinkTop(Bullet) + getLinkTop(oMyPlane) <= 0);
 }
-
-// ////1.2.3 Periodically detect if we need to remove a Bullet instance
-// /**
-//  * This function checks whether to remove a Bullet instance.
-//  * A Bullet instance is removed in the following scenarios:
-//  *   (1) The Bullet flies out of the gameboard region
-//  *   (2) The Bullet hits an enemy plane and explodes
-//  * @param {HTMLElement} Bullet reference to the Bullet  
-//  * @param {Number} BulletMovingTimer the TimerID of the timer that 
-//  *                  lets Bullet moving periodically
-//  * @param {Function} ClearMyself a callback function to remove the timer to this function
-//  * @Note I know it's wired to remove a timer inside a function that itself is
-//  *       controlled by this timer. But it works. (Also see the timer for EnemyPlane) 
-//  */
-// this.CheckRemoval = function(Bullet, BulletMovingTimer, ClearMyself){
-// 	/* Helper function for checking */
-// 	let check = (Bullet) => {
-// 		let canRemove = false;
-// 		let bulletTop = getLinkTop(Bullet) + getLinkTop(oMyPlane);
-// 		let bulletLeft = getLinkLeft(Bullet) + getLinkLeft(oMyPlane);
-// 		let bulletRight = getLinkRight(Bullet) + getLinkRight(oMyPlane);
-// 		let bulletBottom = getLinkBottom(Bullet) + getLinkBottom(oMyPlane);
-		
-// 		// debug
-// 		console.log(`Bullet left:${bulletLeft}, bullet Top:${bulletTop}`);
-
-// 		// Check if scenario (1) happens
-// 		if (bulletTop < 0){
-// 			canRemove = true;
-// 		}
-
-// 		if (!canRemove){
-// 			// Check if scenario (2) happens
-// 			for (var i = 0; i < enemyArr.length; i++) {
-// 				let thisEnemy = enemyArr[i];
-// 				let thisEnemyTop = getLinkTop(thisEnemy);
-// 				let thisEnemyBottom = getLinkBottom(thisEnemy);
-// 				let thisEnemyLeft = getLinkLeft(thisEnemy);
-// 				let thisEnemyRight = getLinkRight(thisEnemy);
-				
-// 				if (
-// 					/* Collision condition */
-// 					(
-// 						/* (
-// 							bulletRight - thisEnemyLeft > 0 &&
-// 							bulletRight - thisEnemyLeft < getLinkWidth(thisEnemy)
-// 						) ||  
-// 						(
-// 						thisEnemyRight - bulletLeft > 0 &&
-// 						thisEnemyRight - bulletLeft < getLinkWidth(thisEnemy)
-// 						) */
-// 						bulletLeft - thisEnemyLeft > (-1) * getLinkWidth(Bullet)
-// 						&&
-// 						bulletLeft - thisEnemyLeft < getLinkWidth(thisEnemy)
-// 					) && 
-// 					(
-// 						/* (
-// 							bulletBottom - thisEnemyTop > 0 &&
-// 							bulletBottom - thisEnemyTop < getLinkHeight(thisEnemy)
-// 						) ||
-// 						(
-// 							thisEnemyBottom - bulletTop > 0 &&
-// 							thisEnemyBottom - bulletTop < getLinkHeight(thisEnemy)	
-// 						) */
-// 						bulletTop - thisEnemyTop > (-1) * getLinkHeight(Bullet)
-// 						&&
-// 						bulletTop - thisEnemyTop <  getLinkHeight(thisEnemy)
-// 					)
-// 				){
-// 					canRemove = true; 
-// 					thisEnemy.style.backgroundImage = "url('images/crash/ownbz.png')";
-// 					thisEnemy.style.backgroundSize = "cover";
-// 					enemyOver = true;	
-// 					break;
-// 				}
-// 			}
-// 		}
-// 		return canRemove;
-// 	}
-// 	var removalTimer = window.setInterval(() => {
-// 		var canRemove = check(Bullet);
-// 		if (canRemove){
-// 			oMyPlane.removeChild(Bullet);
-// 			window.clearInterval(BulletMovingTimer);
-// 			window.clearInterval(removalTimer);
-// 			ClearMyself(removalTimer);//call GameAPI.BulletNTimer to remove the timer to this function
-// 		}
-// 	}, 2000); // removal checking time is 500ms
-// 	return removalTimer;
-// }
-
-////1.2.4,清除导弹实例
-// this.ClearBullet = function(Bullet, TimerID){
-// 	//TO DO: Given a bullet and its timer. Clear the Bullet from the screen
-// 	// and clear the timer
-// 	try{
-// 		oMyPlane.removeChild(Bullet);
-// 		clearInterval(TimerID);
-// 	}
-// 	catch (e){
-		
-// 	}
-// }
 /**
  * Removes a bullet from game board
  * @param Bullet an HTMLElement
@@ -410,20 +265,7 @@ this.ClearBullet = function(Bullet){
 	oMyPlane.removeChild(Bullet);
 }
 
-//// 1.2.5 Delaying clearing Bullet instance
-this.DelayingClearBullet = async function(Bullet, BulletMovingTimer){
-	return new Promise((resolve, reject) => {
-		let bulletOutOfBoundTimer = window.setInterval(()=>{
-			if (getLinkTop(Bullet) + getLinkTop(oMyPlane) <= 0){
-				oMyPlane.removeChild(Bullet);
-				clearInterval(BulletMovingTimer);
-				clearInterval(bulletOutOfBoundTimer);
-				resolve(true);
-			}
-		}, 10)
-	});
-}
-
+/************************************* 5. Enemy Plane Functions ***************************************/
 //1.2.2敌机随机出现(数量随机、种类随机、位置随机、速度随机) 
 //随机创建敌机函数
 /**
@@ -512,16 +354,25 @@ this.enemyCreate=function(){
 	},800)
 	this.TimerList.push(t);
 }
-/*************************************二，玩家飞机与敌机的交互***************************************/
-//2.0玩家飞机与敌机的碰撞检测 
+/************************************* 6. Collision Detection Functions ***************************************/
+//玩家飞机与敌机的碰撞检测
+/**
+ * Detect if bomber collides with enemy planes
+ *   If bomber collies with an enemy plane, do the following:
+ *   (1) draw the enemy plane which collides with bomber as explosion picture
+ *   (2) draw the Bomber background as explosion picture
+ *   (3) remove all timers in global timer list
+ *   (4) Disable user mouse control
+ *   (5) redirect the page to gameOverPage
+ * No param required
+ * @return void
+ *  */ 
 this.planesCrash= function(){
 
-	// var t = setInterval(function(){
 		myPlaneT = getLinkTop(oMyPlane);
 		myPlaneL = getLinkLeft(oMyPlane);
 		for (var i = 0; i < enemyArr.length; i++) {
 			if( 
-				
 				(	
 					Math.abs(myPlaneL-getLinkLeft(enemyArr[i]))< myPlaneW||
 					Math.abs(myPlaneL-getLinkLeft(enemyArr[i]))< getLinkWidth(enemyArr[i])
@@ -560,13 +411,9 @@ this.planesCrash= function(){
 			oMyPlane.onmousemove = null;
 			oPlaneGame.onmousemove = null;
 		}
-	// },10)
+
 }
 //2.1玩家飞机导弹与敌机的碰撞检测
-//分数 
-var scoreNum = 0;
-//敌机是否与导弹碰撞
-// var enemyOver = false;
 /**
  * Determine if a bullet collides with enemy planes (stored in enemyArr[] list)
  * @param Bullet an HTMLElement
@@ -593,12 +440,10 @@ this.bulletPlanesCrash = function(Bullet){
 			 ){
 			 	enemyArr[i].style.backgroundImage = "url('images/crash/ownbz.png')";
 			 	enemyArr[i].style.backgroundSize = "cover";
-			 	// enemyOver  = true;
 				AddUserGrade(enemyArr[i]);
 				isCollide  = true;
 			}
 			else{
-				// enemyOver  = false;
 			}		
 		};
 		return isCollide;
@@ -625,16 +470,14 @@ this.EnemyLaserCrash = function(LaserBeam){
 			enemyArr[i].style.backgroundImage = "url('images/crash/ownbz.png')";
 			enemyArr[i].style.backgroundSize = "cover";
 			AddUserGrade(enemyArr[i]);
-			// enemyOver  = true;	
 		}
 		/* Below is bad logic: to be fixed*/
 		else{
-			// enemyOver  = false;
 		}
 		/* Bad Logic Ends*/
 	}
 }
-
+/************************************* 6. User Grades ***************************************/
 /**
  * Add user's grade according to the type of enemy plane he shoots down
  * @param Enemy
@@ -651,18 +494,15 @@ function AddUserGrade(Enemy){
 	}
 }
 
-//3.0实时显示分数
+//3.0 Display current score
 this.displayScore = function(){
-	var t =setInterval(function(){	
-		// if(enemyOver  == true && end == false){
-		// 	scoreNum ++;
-		// }
+	var t =setInterval(function(){
 		oScoreLTPlay.innerHTML = scoreNum;
 		if(end == true){clearTimeout(t);}		
 	},10) 
 	this.TimerList.push(t);
 }
-/*************************************三，js获取外部样式表属性的函数***************************************/
+/************************************* Get CSS Style Value on the fly using JS ***************************************/
 function getLinkHeight(object){
 	return parseInt(window.getComputedStyle ? window.getComputedStyle(object,false).height : object.currentStyle.height);
 }
@@ -681,25 +521,4 @@ function getLinkRight(object){
 function getLinkBottom(object){
 	return parseInt(window.getComputedStyle ? window.getComputedStyle(object,false).bottom : object.currentStyle.bottom);
 }
-/*************************************四,执行***************************************/
-/* function GameStart(){	
-	// 1.0 背景变动
-	bgMove();
-	// //1.1,随着鼠标的移动而移动
-	//oPlaneGame.onmousemove = oMyPlaneMove;
-	// //从背景移入飞机时，触发e的事件源发生了变化（由背景变为了玩家飞机），所以代码中的数值也发生了变化)  
-	//oMyPlane.onmousemove = oMyPlaneMove; 
-	//bulletsMove();
-	// //1.2创建敌机 
-	enemyCreate();
-	//2.0飞机与飞机之间的碰撞检测
-	var t = setInterval(function(){planesCrash();bulletPlanesCrash()},50);
-	TimerList.push(t);
-	//2.1飞机与导弹之间的碰撞检测
-	//3.0实时显示分数 
-	displayScore();
-}  */
 }
-
-// Execute Main function when <body> is loaded  
-// window.addEventListener("load", Main, false);

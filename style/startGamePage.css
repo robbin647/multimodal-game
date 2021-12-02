@@ -1,3 +1,6 @@
+html{
+    overflow: hidden;
+}
 #wrapper {
     margin: 10px auto;
     width: 99% ;

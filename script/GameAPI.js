@@ -406,7 +406,12 @@ class GameAPI {
     BomberMovesRightBy = (distance) => {this.#Bomber.SetHorizontalDelta(distance); this.#Bomber.MoveRight();}
     SetBomberPosition = (XPercent, YPercent) => {this.#Bomber.SetPositionByPercent(XPercent, YPercent);}
     BomberFiresLaser = (IsFireLaser) => {(IsFireLaser) ? this.#Bomber.FireLaser() : this.#Bomber.StopLaser();}
-
+    /**
+     * Create enemy in the given interval
+     * @param Interval the interval used (in ms) to call MyGame.enemyCreate()
+     * @return true if succeed
+     */
+    CreateEnemy = (Interval) => {MyGame.enemyCreate(Interval); return true}
 
     /* Main function */
     StartGame = () => {
@@ -420,7 +425,7 @@ class GameAPI {
         
 
         // Generate enemy planes
-        MyGame.enemyCreate();
+        // MyGame.enemyCreate();
 
         //小飞机与敌机之间的碰撞检测
         // Check if Bomber crashes into an enemy plane

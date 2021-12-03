@@ -44,6 +44,8 @@ var myBulletL = 0;
 var end = false;
 //global list to store all timers
 this.TimerList = [];
+// global timer for enemy creation
+this.EnemyGenTimer = null;
 // User score
 var scoreNum = 0;
 
@@ -270,29 +272,35 @@ this.ClearBullet = function(Bullet){
 //随机创建敌机函数
 /**
  * Create an enemy plane HTMLElement, and set a timer for it to move constantly
- * @param type {Number}: determines which type of enemy plane to create {enemyXiao, enemyZhong1, enemyZhong2, enemyDa}
+ * @param Type {Number}: determines which type of enemy plane to create {enemyXiao, enemyZhong1, enemyZhong2, enemyDa}
+ * @param TimeBase {Number} generally affects the moving speed of all enemies. Larger TimeBase means slower movement 
  * @reutrn {void}
  */
-const enemyPlanes = function(type){
+const enemyPlanes = function(Type, TimeBase){
 	var enemyClass = ["enemyXiao","enemyZhong1","enemyZhong2","enemyDa"];
 	var enemyType = ["xiaofeiji.png","xiaozhong.png","zhong.png","dafeiji.png"];
 	//位置随机、位置随机、速度随机(时间)
-	var le = 0;     //left
+	var left_boundary = 0;   //limits the leftmost x-position of an enemy
+	var x_range = 0;     //allowed range along x-direction
 	var to = 0;    //top
 	var time = 0;   //time
-	switch(type){
-		case 0:le = 286;to = 10;time = parseInt(Math.random()*80+50);break; 
-		case 1:le = 274;to = 10;time = parseInt(Math.random()*10+100);break;
-		case 2:le = 230;to = 10;time = parseInt(Math.random()*10+120);break;
-		case 3:le = 210;to = 10;time = 180;break;
+	switch(Type){
+		// case 0:left_boundary=13; x_range = 260;to = 10;time = parseInt(Math.random()*80+500);break; 
+		// case 1:left_boundary=7; x_range = 260;to = 10;time = parseInt(Math.random()*10+1000);break;
+		// case 2:left_boundary=0; x_range = 215;to = 10;time = parseInt(Math.random()*10+1200);break;
+		// case 3:left_boundary=0; x_range = 205;to = 10;time = 1800;break;
+		case 0:left_boundary=13; x_range = 260;to = 10;time = Math.floor(Math.random()*80+Math.floor(TimeBase / 6.0));break; 
+		case 1:left_boundary=7; x_range = 260;to = 10;time = Math.floor(Math.random()*10+Math.floor(TimeBase / 3.0));break;
+		case 2:left_boundary=0; x_range = 215;to = 10;time = Math.floor(Math.random()*10+Math.floor(TimeBase / 2.5));break;
+		case 3:left_boundary=0; x_range = 205;to = 10;time = Math.floor(TimeBase / 1.6);break;
 	}
 	//动态创建敌机节点
 	var enemy = document.createElement("div");
 	//种类随机
-	enemy.style.backgroundImage = "url('images/enemy/"+enemyType[type]+"')";
-	enemy.className = enemyClass[type];
+	enemy.style.backgroundImage = "url('images/enemy/"+enemyType[Type]+"')";
+	enemy.className = enemyClass[Type];
 	//在各自边界的范围下面取随机值
-	var rPOsition = parseInt(Math.random()*le);
+	var rPOsition = parseInt(left_boundary + Math.random()*x_range);
 	enemy.style.top = 10 + "px";
 	enemy.style.left =  rPOsition +"px";
 	enemyPlaneL = parseInt(enemy.style.left);
@@ -341,18 +349,26 @@ const enemyPlanes = function(type){
 	enemyPlaneW = getLinkWidth(enemy); 
 }
 //随机创建敌机
-this.enemyCreate=function(){
+/**
+ * Sets a timer for generating enemy planes
+ * @param {Number} Interval the interval (in ms) to generate a new enemy
+ * @return {void}
+ */
+this.enemyCreate=function(Interval){
 	//15小 = 3中1 = 2中2 = 1大
 	var time = 0;
 	var t = setInterval(function(){
 		time++;
-		if(time <= 10){enemyPlanes(0);}  //小
-		if(time > 5 && time <= 7){enemyPlanes(1)}  //中1
-		if(time > 8 && time <= 9){enemyPlanes(2)}  //中2	
-		if(time == 11){time = 0;enemyPlanes(3);}  //大、
+		if(time <= 10){enemyPlanes(0, Interval);}  //小
+		if(time > 5 && time <= 7){enemyPlanes(1, Interval)}  //中1
+		if(time > 8 && time <= 9){enemyPlanes(2, Interval)}  //中2	
+		if(time == 11){time = 0;enemyPlanes(3, Interval);}  //大、
 		if(end == true){clearTimeout(t);}
-	},800)
-	this.TimerList.push(t);
+	},Interval)
+	// always clear the old timer EnemyGenTimer before create a new one
+	if (this.EnemyGenTimer != null)
+		window.clearInterval(this.EnemyGenTimer);
+	this.EnemyGenimer = t; 
 }
 /************************************* 6. Collision Detection Functions ***************************************/
 //玩家飞机与敌机的碰撞检测

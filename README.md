@@ -1,13 +1,21 @@
 # Game of Bombers
 
 
-## GameAPI (v.4)
+## GameAPI (v.5)
 
-The GameAPI v.4 is released.
+The GameAPI v.5 is released.
 
-Since there are quite a few bugs in the original game, Robbin tried hard to develop this API while fixing the bugs at the same time. And he decided to deliver the GameAPI in several releases.
+> __IMPORTANT__ Start from V5 you should use the following to call GameAPI:
+  ```javascript
+     // In start.html or other top-level files
+     import {GameAPI} from './script/GameAPI.js'; 
+     GameAPI.StartFire(); //Syntax: GameAPI.<method name>
+    // In JS files that is within the same folder as GameAPI.js
+     import {GameAPI} from './GameAPI.js'
+     GameAPI.StartFire();
+  ```
 
-The v.4 gives you these functions:
+The v.5 gives you these functions:
 
 + ```GameAPI.StartGame(): void```  
  Start the bomber game.
@@ -43,6 +51,9 @@ The v.4 gives you these functions:
 
 + ```GameAPI.BomberFiresLaser(IsFireLaser: Boolean): void```  
   This method controls the bomber to start or stop firing laser beam. For example, by passing the parameter ```IsFireLaser``` as ```true```, you enable the bomber to fire laser.
+
++ ```GameAPI.CreateEnemy(Interavl: Number): void```  
+  This will set the speed (the unit for Interval: ms) of enemy plane's creation and movement. If you do not call it, the game will use a default value 5400 millisecond.
 
 ## Extra Note: 
   > **Q: How to import JavaScript modules from external javascript file into ```<script>``` tag of HTML file?**

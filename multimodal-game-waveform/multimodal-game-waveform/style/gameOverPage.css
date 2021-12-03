@@ -1,0 +1,51 @@
+html {
+    background-size: cover;
+    /* background-image: url("../images/own/sky.png")  ; */
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 15% auto 0 auto;
+}
+
+#title {
+    color: #ff914d;
+}
+
+#score {
+    color: black;
+}
+
+.buttonContainer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.buttonWrapper{
+    background-color: #ff914d;
+    /* background-color: #66a18f; */
+    margin: 5px;
+    height: 60px;
+    border-radius: 10px;
+}
+
+#plane1{
+    position: absolute;
+	/* float: left; */
+	margin-top: -250px;
+	width:715px;
+	height:1260px;
+	background-size: contain;
+}
+#plane2{
+    transform: scaleY(-1);
+    position: fixed;
+    right: 0px;
+    top: -250px;
+	/* float: left; */
+	width:715px;    
+	height:1260px;
+}

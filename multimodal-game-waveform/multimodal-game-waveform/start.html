@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>Game of Bombers</title>
+		<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
+		<link rel="stylesheet" href="./extern/bootstrap.min.css"/ >
+		<link rel="stylesheet" href="style/index.css"></link>
+	</head>
+	<body>
+		<!-- Advice: You can show HTML tags as plain text in HTML on a website or webpage by replacing < with &lt; or &60; 
+			and > with &gt; or &62; on each HTML tag that you want to be visible.
+		<audio src="music/sin2.mp3" loop="loop">Sorry. But your browser does not support &lt audio &gt tag.</audio>
+		-->
+		<div class="container">
+			<div class="row">
+				<!-- React JS Begins-->
+				<div id="react-playground"></div>
+				<!-- React JS Ends-->
+			</div>
+			<div class="row">
+				<div class="col-sm-3 has-border">
+					<div class="row">
+						<div class="col-sm has-border">
+							<img alt="col1 row 1 "src="images/enemy/dafeiji.png" width="300px" height="300px"/>
+						</div>
+					</div>
+					<div class="row has-border">
+						<div class="col-sm has-border">
+							<div id='sketch-holder'>
+								<video id="video" playsinline style="transform: scaleX(-1);"></video>
+								<canvas id="output"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 has-border">
+					<div class="row "> <!-- justify-content-center-->
+						<div id="planeGame">
+							<div id="myPlane"></div>
+							
+							<p class="scoreLT">Score:<span id="scoreLTPlay">0</span></p>
+							<div id="stop"></div>
+							<!-- 提示框 -->
+							<div id="relAlert">
+								<div id="head">
+									<p>Game Over!</p>
+								</div>
+								<div id="scoreIn">1000</div>
+								<div id="btn">
+									<a id="btnStart" href="start.html">Play again</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 has-border">
+					<div class="row">
+						<div class="col-md has-border">
+							<div id="instruction">
+								<h3>Game Instructions</h3>
+								<span class="instruction-section">
+									Bomber:
+								</span>
+								<div class="instruction-content">
+									<ul>
+										<li>
+											Move your face around (left and right, top and down).
+											The Bomber will move according to your face movement. Or 
+										</li>
+										<li>
+											Move your mouse cursor into the game board. The bomber will
+											also follow it.
+										</li>
+									</ul>
+								</div>
+								<span class="instruction-section">
+									Bullet & Laser Beam:
+								</span>
+								<div class="instruction-content">
+									<ul>
+										<li>
+											Use you voice volume to control bullet and laser beam.
+											Or alternatively, press the 'W' key to fire bullets, press
+											the 'L' key to shoot laser beam.
+										</li>
+										<li>Raise your voice volume to increase fire rate.
+											Or hold and drag the slider below to tune the fire rate. 
+										</li>
+										<li>
+											Shout at a high volume to fire laser beam.
+										</li>
+										<i>Hint: You can speak or sing or shout whatever thing, it's only the volume that matters :)</i>
+									</ul>
+								</div>
+							</div>
+							<form>
+								<label for="SpeedSlider">Fire rate</label><br/>
+								<input type="range" name="SpeedSlider" id="SpeedSlider" min="30" max="80"/>
+							</form>
+						</div>
+					</div>
+				</div>
+			
+			</div>
+
+		</div>
+	</body>
+	<!-- <script type="module" src="./script/index7.0.js"></script>
+	<script type="module" src="./script/GameAPI.js"></script> -->
+
+	<script type="module">
+		import GameAPI from './script/GameAPI.js';
+
+		//创建一个GameAPI实例
+		const api = new GameAPI();
+
+		//让GameAPI启动游戏
+		api.StartGame();
+
+		//允许鼠标操控小飞机
+		api.AllowCursorControlOnBomber(true);
+
+		//设置导弹的产生速率，单位：每秒多少个导弹
+		api.SetBulletSpeed(33);
+
+		//让小飞机开火，小飞机默认初始时不开火
+		// api.StartFire();
+
+		document.addEventListener("keydown", (e) => {
+			// compatible with IE
+			var event = e || window.event;
+			if (e) {
+				if (event.key === "W" || event.key === "w"){
+					api.StartFire();
+					console.log("Keydown 'w'/'W' ");
+				}
+			}
+		});
+
+		document.addEventListener("keyup", (e) => {
+			// compatible with IE
+			var event = e || window.event;
+			if (e) {
+				if (event.key === "W" || event.key === "w"){
+					api.CeaseFire();
+					console.log("Keyup 'w'/'W' ");
+				}
+			}
+		})
+
+		document.addEventListener("keydown", (e) => {
+			// compatible with IE
+			var event = e || window.event;
+			if (e) {
+				if (event.key === "L" || event.key === "l"){
+					api.BomberFiresLaser(true);
+					console.log("Keydown 'l'/'L' ");
+				}
+			}
+		});
+
+		document.addEventListener("keyup", (e) => {
+			// compatible with IE
+			var event = e || window.event;
+			if (e) {
+				if (event.key === "L" || event.key === "l"){
+					api.BomberFiresLaser(false);
+					console.log("Keyup 'l'/'L' ");
+				}
+			}
+		})
+
+		// slider for setting bomber speed
+		var speedchoice = document.getElementById("SpeedSlider");
+		speedchoice.addEventListener("change", (e) => {
+			console.log("Bullet speed set: " + e.target.value);
+			api.SetBulletSpeed(e.target.value);
+		})
+
+		//让小飞机开始发射镭射光
+        // api.BomberFiresLaser(true);
+
+		//默认4000毫秒后让小飞机停止发射镭射光
+        /* var timer = setTimeout(
+                       () => {api.BomberFiresLaser(false);}
+                       , 4000); */
+				 
+	</script>
+	<!-- Load React Content
+	<script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+	<script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+	<script src="script/react-playground.js"></script>
+	 -->
+	 <!-- Enable Bootstrap4 -->
+	 <scirpt src="./extern/jquery-3.3.1.slim.min.js"></scirpt>
+	 <scirpt src="./extern/popper.min.js"></scirpt>
+	 <scirpt src="./extern/bootstrap.min.js"></scirpt>
+
+	 <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
+	
+	<!--face detection scripts begin-->
+	
+	<!--Load tfjs.core from CDN <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>-->
+	<!-- Add the WASM backend to the global backend registry <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script>--> 
+	<!-- Add BlazeFace code <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script> -->
+	<script src="./script/faceDetection.js"></script>
+
+	<!-- face detection scripts end-->
+</html>

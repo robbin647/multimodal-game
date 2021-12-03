@@ -22,7 +22,25 @@
 				<div class="col-sm-3 has-border">
 					<div class="row">
 						<div class="col-sm has-border">
-							<img alt="col1 row 1 "src="images/enemy/dafeiji.png" width="300px" height="300px"/>
+							<div class="wrapper">
+								<header>
+									<h1>Sinewave of your sound</h1>
+								</header>
+
+								<canvas class="visualizer" width="300" height="100"></canvas>
+
+								<form class="controls">
+									<div>
+										<label for="visual">Visualizer setting</label>
+										<select id="visual" name="visual">
+											<option value="sinewave"selected >Sinewave</option>
+											<option value="frequencybars"  >Frequency bars</option>
+											<option value="off">Off</option>
+										</select>
+									</div>
+								</form>
+
+							</div>
 						</div>
 					</div>
 					<div class="row has-border">
@@ -131,11 +149,14 @@
 	<!--Load tfjs.core from CDN <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>-->
 	<!-- Add the WASM backend to the global backend registry <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script>--> 
 	<!-- Add BlazeFace code <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script> -->
-	<script src="./script/faceDetection.js"></script>
+	<!-- <script src="./script/faceDetection.js"></script> -->
 
 	<!-- face detection scripts end-->
 	<script type="module">
 		import GameInit from './script/GameInit.js';
-		GameInit(); 
+		import audioInit from './script/audio.js';
+
+		GameInit();
+		audioInit(); 
 	</script>
 </html>

@@ -244,6 +244,9 @@ class BulletController{
             if (this.#MainControllerCounter % this.#GenInterval === 0){
                 var NewBullet = MyGame.CreateBullet();
                 this.#AllBullets.push(NewBullet);
+                /* Debug */
+                // console.log("#AllBullets ",this.#AllBullets);
+                /* Debug */
             }
         }
 
@@ -297,9 +300,9 @@ class BulletController{
      *     (3) create a new timer for #MainController, store it in #MainControllerTimer 
      */
     #UpdateMainController(){
-        window.clearInterval(this.#MainControllerTimer);  //(1)
-        this.#MainControllerCounter = 0; //(2)
-        this.#MainControllerTimer = window.setInterval(function(){this.#MainController();}.bind(this), 10); //(3)
+       window.clearInterval(this.#MainControllerTimer);  //(1)
+       this.#MainControllerCounter = 0; //(2)
+       this.#MainControllerTimer = window.setInterval(function(){this.#MainController();}.bind(this), 10); //(3)
     }
 
     /**
@@ -379,7 +382,7 @@ class BulletController{
 
 }
 
-export default class GameAPI {
+class GameAPI {
     /* Declaring private fields */
     #Bomber;
     #BulletController;
@@ -427,8 +430,8 @@ export default class GameAPI {
         MyGame.TimerList.push(DetectBomberEnemyCrash);
 
         //2.1 Enemy and bullet collision detection
-        /* var DetectEnemyBulletCrash = 
-            MyGame.bulletPlanesCrash(); */
+        //  var DetectEnemyBulletCrash =
+        //     MyGame.bulletPlanesCrash();
 
         //3.0实时显示分数 
 	    MyGame.displayScore();
@@ -436,5 +439,6 @@ export default class GameAPI {
     }
 
 }
-
+const myGame = new GameAPI();
+export {myGame as GameAPI};
 

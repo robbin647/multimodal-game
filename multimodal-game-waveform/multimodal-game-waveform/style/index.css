@@ -1,0 +1,228 @@
+/************ Basic Style ***************************/
+/*
+*{
+	margin:0px;padding:0px;
+}
+ul{
+	list-style-type:none;
+}
+a{
+	text-decoration:none;
+	color:black;
+}
+*/
+.has-border{
+	border: 1px solid red;
+
+}
+.container{
+	max-width: 1200px;
+}
+/******** General Style ***************************/
+/******** Specific Style ***************************/
+/******** Game board style ************************/
+#planeGame{
+	width:320px;
+	height:560px;
+
+	background-image:url("../images/bj/bg1.jpg");
+	
+	background-position: 0px 0px;
+
+	margin:10px auto;
+	position: relative;
+
+	overflow: scroll;
+}
+/********* Style for Bomber ***************/
+#myPlane{
+	width:60px;height:80px;
+	background:url("../images/own/own.png") no-repeat;
+	position: absolute;
+	bottom:0px;left:120px;
+	
+	background-size: contain;
+	/*border:1px solid red;*/
+}
+/******** Style for Bullet ****************/
+.bullet{
+	background-image :url('../images/own/zidan.png');
+	width :6px;
+	height :14px;
+	position :absolute;
+	left : 30px; 
+	/*border:1px solid red; */
+}
+
+/* Laser beam styles */
+.laser-beam{
+	padding: 0px;
+	margin: 0px;
+	position: absolute;
+	background-repeat: repeat-y;
+	border-radius: 15px;
+	width: 40px;
+	height: 480px;
+	display: block;
+}
+
+/********** Style for enemy planes *************/
+.enemyXiao,.enemyZhong1,.enemyZhong2,.enemyDa{
+	position :absolute;
+	/*border:1px solid red;*/
+}
+.enemyXiao{
+	width :34px;
+	height: 34px;
+
+}
+.enemyZhong1{
+	width : 46px;
+	height: 60px;
+}
+.enemyZhong2{
+	width : 90px;
+	height: 81px;
+}
+.enemyDa{
+	width :110px;
+	height: 164px;
+}
+/*********** Style for game over pop up ***********/
+#relAlert,#head,#scoreIn,#btn{
+	width:160px;
+	background-image:url("../images/end/end2.png");
+}
+#relAlert{
+	position: absolute;
+	top:210px;left:75px;
+	height:210px;
+	display:none;
+	z-index:10;
+}
+#head{
+	height:65px;
+	font-size:18px;
+	color:orange;
+	font-weight:bolder;
+	text-align: center;
+	line-height:65px;
+}	
+#scoreIn{
+	height:80px;
+	border-top:1px solid #808080;
+	border-bottom:1px solid #808080;
+	text-align: center;
+	line-height:80px;
+	color:orange;
+}	
+#btnStart{
+	text-decoration: none;
+    display: block;
+    margin: 10px auto;
+    width: 50%;
+    text-align: center;
+    background-color: #5555ec;
+    color: #ecec22;
+    border-radius: 5px;
+}
+/*********** Style for score display 
+             at the top left corner of Game page ********/
+.scoreLT{
+	color:#ccc;
+	font-weight:bold;
+	font-size:16px;
+}
+.scoreLT #scoreLTPlay{
+	color:orange;
+	font-weight:400;
+}
+#stop{
+	width:320px;height:580px;
+	background-image:url("../images/bj/bg1.jpg");      
+	top:0px;
+	position:absolute;
+	z-index:1;
+	display:none;
+}
+
+html {
+    width: 100%;
+	height: 100%;
+    /* background-size: cover; */
+    /* background-image: url("../images/own/sky.png")  ; */
+	background-color: rgb(213, 215, 218);
+	overflow: hidden;
+}
+
+body{
+	font-family: 'Poppins',sans-serif;
+	font-size: 1em;
+	/* overflow-y: hidden; */
+}
+
+/*style for buttons in pages*/
+.btn{
+	/* padding-top:20px; */
+	line-height: 50px;
+	height: 100%;
+	text-align: center;
+	width: 200px;
+	cursor: pointer;
+	color: #FFF;
+	transition: all 0.5s;
+	position: relative;
+	margin-block-start: 0em;
+    margin-block-end: 0em;
+	margin: auto;
+}
+
+.btn::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background-color: rgba(255,255,255,0.1);
+	transition: all 0.3s;
+}
+
+.btn:hover::before {
+	opacity: 0 ;
+	transform: scale(0.5,0.5);
+}
+
+.btn::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	opacity: 0;
+	transition: all 0.3s;
+	border: 1px solid rgba(255,255,255,0.5);
+	transform: scale(1.2,1.2);
+}
+
+.btn:hover::after {
+	opacity: 1;
+	transform: scale(1,1);
+}
+
+video, #output {
+	position: absolute;
+}
+/* Style for Instruction text */
+.instruction {
+	font-size: 1em;
+}
+span.instruction-section{
+	font-size: 1em;
+}
+div.instruction-content{
+	font-size: 12px;
+}

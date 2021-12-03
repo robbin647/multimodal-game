@@ -1,0 +1,37 @@
+.container{
+    /* min-width: 400px; */
+    margin-left: 350px;
+    margin-top: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#logo{
+    margin-top: -130px;
+    height: 500px;
+    width: 500px;
+}
+
+.buttonContainer{
+    margin: -100px 40px;
+}
+
+.buttonWrapper{
+    margin-top: 30px;
+    width: fit-content;
+    /* margin-inline: 110px; */
+    /* background-color: #66a18f; */
+    background-color: #ff914d;
+    /* background-color: rgb(0, 153, 204); */
+	border-radius: 10px;
+
+}
+
+#plane{
+    position: absolute;
+	/* float: left; */
+	margin-top: -100px;
+	width:572px;
+	height:1008;
+}

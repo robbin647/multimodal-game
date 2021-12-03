@@ -1,14 +1,31 @@
+html{
+    overflow: hidden;
+}
+#wrapper {
+    margin: 10px auto;
+    width: 99% ;
+    height : 90%;
+}
+#image {
+    width: 40%;
+    float: left;
+}
+#container {
+    width: 40%;
+    overflow: scroll;
+}
 .container{
     /* min-width: 400px; */
     margin-left: 350px;
-    margin-top: 200px;
+    margin-top: 0px;
+    padding-left: 86px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 #logo{
-    margin-top: -130px;
+    margin-top: 0px;
     height: 500px;
     width: 500px;
 }
@@ -29,9 +46,9 @@
 }
 
 #plane{
-    position: absolute;
+    position: static;
 	/* float: left; */
-	margin-top: -100px;
+	margin-top: 0px;
 	width:572px;
-	height:1008;
+	height:600px;
 }

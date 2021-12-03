@@ -1,0 +1,39 @@
+TODO in version 5
++++++++++++++++++++++++
+Add features: From [Task for Week 6]
+Augmneted user requirements by ZOU 
+
+R3.1 Enemy planes will appear at
+different stages in the game.
+[enemyxiao => 0s (at the
+beginning); enemyZhong1 => 5s
+after the beginning;
+enemyZhong2 => 8s after the
+beginning; enemyDa => 15s after
+the beginning]
+
+R3.2 Each kind of enemy plane moves
+at its own fixed speed.
+[enemyxiao => 80px/sec;
+enemyZhong1 => 60px/sec;
+enemyZhong2 => 40px/sec; enemyDa
+=> 20px/sec]
+
+R3.3 Each kind of enemy plane will
+have its own “value of lives”. This
+means how many bullets are
+required to take it down.
+[enemyxiao => 100 bullet;
+enemyZhong1 => 200 bullet;
+enemyZhong2 => 400 bullet;
+enemyDa => 800 bullet;]
+
+R3.4 After taking down an enemy
+plane, the user will get rewarded
+with different marks for different
+kinds of plane. [enemyxiao => 10
+marks; enemyZhong1 => 20
+marks; enemyZhong2 => 50
+marks; enemyDa => 100 marks;]
+++++++++++++++++++++++++++++++
+[Optional] Use JSX to rewrite game logics.

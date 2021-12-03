@@ -41,7 +41,7 @@
 							
 							<p class="scoreLT">Score:<span id="scoreLTPlay">0</span></p>
 							<div id="stop"></div>
-							<!-- 提示框 -->
+							<!-- Game Over Pop Up -->
 							<div id="relAlert">
 								<div id="head">
 									<p>Game Over!</p>
@@ -97,6 +97,9 @@
 							<form>
 								<label for="SpeedSlider">Fire rate</label><br/>
 								<input type="range" name="SpeedSlider" id="SpeedSlider" min="30" max="80"/>
+								<br/>
+								<label for="EnemySpeed">Adjust game pace</label><br/>
+								<input type="range" name="EnemySpeed" id="EnemySpeed" min="3000" max="9000" />
 							</form>
 						</div>
 					</div>
@@ -109,84 +112,6 @@
 	<!-- <script type="module" src="./script/index7.0.js"></script>
 	<script type="module" src="./script/GameAPI.js"></script> -->
 
-	<script type="module">
-		import GameAPI from './script/GameAPI.js';
-
-		//创建一个GameAPI实例
-		const api = new GameAPI();
-
-		//让GameAPI启动游戏
-		api.StartGame();
-
-		//允许鼠标操控小飞机
-		api.AllowCursorControlOnBomber(true);
-
-		//设置导弹的产生速率，单位：每秒多少个导弹
-		api.SetBulletSpeed(33);
-
-		//让小飞机开火，小飞机默认初始时不开火
-		// api.StartFire();
-
-		document.addEventListener("keydown", (e) => {
-			// compatible with IE
-			var event = e || window.event;
-			if (e) {
-				if (event.key === "W" || event.key === "w"){
-					api.StartFire();
-					console.log("Keydown 'w'/'W' ");
-				}
-			}
-		});
-
-		document.addEventListener("keyup", (e) => {
-			// compatible with IE
-			var event = e || window.event;
-			if (e) {
-				if (event.key === "W" || event.key === "w"){
-					api.CeaseFire();
-					console.log("Keyup 'w'/'W' ");
-				}
-			}
-		})
-
-		document.addEventListener("keydown", (e) => {
-			// compatible with IE
-			var event = e || window.event;
-			if (e) {
-				if (event.key === "L" || event.key === "l"){
-					api.BomberFiresLaser(true);
-					console.log("Keydown 'l'/'L' ");
-				}
-			}
-		});
-
-		document.addEventListener("keyup", (e) => {
-			// compatible with IE
-			var event = e || window.event;
-			if (e) {
-				if (event.key === "L" || event.key === "l"){
-					api.BomberFiresLaser(false);
-					console.log("Keyup 'l'/'L' ");
-				}
-			}
-		})
-
-		// slider for setting bomber speed
-		var speedchoice = document.getElementById("SpeedSlider");
-		speedchoice.addEventListener("change", (e) => {
-			console.log("Bullet speed set: " + e.target.value);
-			api.SetBulletSpeed(e.target.value);
-		})
-
-		//让小飞机开始发射镭射光
-        // api.BomberFiresLaser(true);
-
-		//默认4000毫秒后让小飞机停止发射镭射光
-        /* var timer = setTimeout(
-                       () => {api.BomberFiresLaser(false);}
-                       , 4000); */
-				 
-	</script>
 	<!-- Load React Content
 	<script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
 	<script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
@@ -209,4 +134,8 @@
 	<script src="./script/faceDetection.js"></script>
 
 	<!-- face detection scripts end-->
+	<script type="module">
+		import GameInit from './script/GameInit.js';
+		GameInit(); 
+	</script>
 </html>

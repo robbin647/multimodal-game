@@ -180,26 +180,26 @@ class Bomber{
  * 
  * Fields: 
  *   - Bullet: HTMLElement
- *   - MovingID: the Timer ID for Bullet moving periodically
+ *   - TimerID: the Timer ID for Bullet moving periodically
  *   - RemovalID: the Timer ID for detecting the event that will cause
  *       the removal of a bullet (i.e. bullet hits an enemy or 
  *       bullet flies out of the gameboard) 
  */
 const BulletNTimer = class {
     #Bullet;
-    #MovingID;
+    #TimerID;
     // #RemovalID;
     constructor(Bullet, TimerID) {
-        this.Bullet = Bullet;
-        this.TimerID = TimerID;
+        this.#Bullet = Bullet;
+        this.#TimerID = TimerID;
         // this.RemovalID = RemovalID;
     }
-    GetBullet = ()=> (this.Bullet);
-    GetTimerID = ()=> (this.TimerID);
+    GetBullet = ()=> (this.#Bullet);
+    GetTimerID = ()=> (this.#TimerID);
     // GetRemovalID = () => (this.RemovalID);
     
     /* Debugging Begin */
-    StopBulletMove = () => {clearInterval(this.TimerID);};
+    // StopBulletMove = () => {clearInterval(this.#TimerID);};
     /* Debugging End  */
 }
 
@@ -379,7 +379,7 @@ class BulletController{
 
 }
 
-export default class GameAPI {
+class GameAPI {
     /* Declaring private fields */
     #Bomber;
     #BulletController;
@@ -406,35 +406,45 @@ export default class GameAPI {
     BomberMovesRightBy = (distance) => {this.#Bomber.SetHorizontalDelta(distance); this.#Bomber.MoveRight();}
     SetBomberPosition = (XPercent, YPercent) => {this.#Bomber.SetPositionByPercent(XPercent, YPercent);}
     BomberFiresLaser = (IsFireLaser) => {(IsFireLaser) ? this.#Bomber.FireLaser() : this.#Bomber.StopLaser();}
-
+    /**
+     * Create enemy in the given interval
+     * @param Interval the interval used (in ms) to call MyGame.enemyCreate()
+     * @return true if succeed
+     */
+    CreateEnemy = (Interval) => {MyGame.enemyCreate(Interval); return true}
 
     /* Main function */
     StartGame = () => {
         // 1.0 背景变动
+        // Enable background sliding
         //MyGame.bgMove();
 
-        //1.1 允许鼠标操控小飞机  
-        //已经移到GameAPI.AllowCursorControlOnBomber方法中
+        //1.1 允许鼠标操控小飞机 
+        // Enable cursor control on Bomber 
+        //moved to GameAPI.AllowCursorControlOnBomber()
         
 
-        // //1.2创建敌机 
-        MyGame.enemyCreate();
+        // Generate enemy planes
+        // MyGame.enemyCreate();
 
-        //2.0飞机与飞机之间的碰撞检测
+        //小飞机与敌机之间的碰撞检测
+        // Check if Bomber crashes into an enemy plane
         var DetectBomberEnemyCrash = setInterval(() => {
             MyGame.planesCrash();
         },50);
         MyGame.TimerList.push(DetectBomberEnemyCrash);
 
-        //2.1 Enemy and bullet collision detection
-        /* var DetectEnemyBulletCrash = 
-            MyGame.bulletPlanesCrash(); */
-
-        //3.0实时显示分数 
+        //Enemy and bullet collision detection
+        // moved to GameAPI.BulletController.#MainController()
+        
+        //实时显示分数
+        // Keep updating user grade on the top left corner of the game board 
 	    MyGame.displayScore();
 
     }
 
 }
 
+const myAPI = new GameAPI();
+export {myAPI as GameAPI};
 

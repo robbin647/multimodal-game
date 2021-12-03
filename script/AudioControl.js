@@ -76,6 +76,11 @@ function Audio() {
         // window. is needed otherwise Safari explodes
         // sample rate: 16000Hz ; Good enough, see https://en.wikipedia.org/wiki/Sampling_(signal_processing)
         var audioCtx = new (window.AudioContext || window.webkitAudioContext)({sampleRate: 16000,});
+        var listenAudioCtx = document.addEventListener("click", (()=>{
+            audioCtx.resume();
+            document.removeEventListener("click",listenAudioCtx );
+        }).bind(this));
+
         // var voiceSelect = document.getElementById("voice");
         var source;
         var stream;
@@ -255,10 +260,10 @@ function Audio() {
         // Set up an event listeners to change visualize and voice settings
 
         document.getElementById("visual").addEventListener("change", (function(e){
-            Audio.visualSetting = e.target.value;
+            visualSetting = e.target.value;
             window.cancelAnimationFrame(drawVisual);
             visualize();
-            console.log("Using visualSetting: ", e.target.value);
+            console.log("Using visualSetting: ", visualSetting);
         }).bind(this));
     }
 

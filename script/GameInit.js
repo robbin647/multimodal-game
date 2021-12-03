@@ -20,7 +20,6 @@ function GameInit(){
 			if (e) {
 				if (event.key === "W" || event.key === "w"){
 					GameAPI.StartFire();
-					console.log("Keydown 'w'/'W' ");
 				}
 			}
 		});
@@ -31,7 +30,6 @@ function GameInit(){
 			if (e) {
 				if (event.key === "W" || event.key === "w"){
 					GameAPI.CeaseFire();
-					console.log("Keyup 'w'/'W' ");
 				}
 			}
 		})
@@ -42,7 +40,6 @@ function GameInit(){
 			if (e) {
 				if (event.key === "L" || event.key === "l"){
 					GameAPI.BomberFiresLaser(true);
-					console.log("Keydown 'l'/'L' ");
 				}
 			}
 		});
@@ -53,7 +50,6 @@ function GameInit(){
 			if (e) {
 				if (event.key === "L" || event.key === "l"){
 					GameAPI.BomberFiresLaser(false);
-					console.log("Keyup 'l'/'L' ");
 				}
 			}
 		})

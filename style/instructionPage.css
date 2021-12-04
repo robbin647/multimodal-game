@@ -10,7 +10,7 @@ html{
     border: grey 10px;
     border-style: double;
     border-radius: 20px;
-    padding: 35px 0px;
+    padding: 35px 20px;
     color: grey;
 }
 
@@ -36,6 +36,7 @@ ul li{
     margin-right: 300px;
     /* background-color: #66a18f; */
     float: right;
+    margin-top: -100px;
 }
 
 .btn{

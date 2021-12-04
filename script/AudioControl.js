@@ -45,7 +45,7 @@ function Audio() {
      */
     function Init(){
         let heading = document.querySelector('h1');
-        heading.textContent = 'Voice-change-O-matic';
+        heading.textContent = '';
 
         // Older browsers might not implement mediaDevices at all, so we set an empty object first
         if (navigator.mediaDevices === undefined) {

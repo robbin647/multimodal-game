@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html xmlns="">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Game of Bombers</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="style/index.css"></link>
+	</head>
+	<body>
+		<!-- Advice: You can show HTML tags as plain text in HTML on a website or webpage by replacing < with &lt; or &60;
+			and > with &gt; or &62; on each HTML tag that you want to be visible.
+		<audio src="music/sin2.mp3" loop="loop">Sorry. But your browser does not support &lt audio &gt tag.</audio>
+		-->
+		<div class="container">
+			<div class="row">
+				<!-- React JS Begins-->
+				<div id="react-playground"></div>
+				<!-- React JS Ends-->
+			</div>
+			<div class="row">
+				<div class="col-sm-3 has-border">
+					<div class="row">
+						<div class="col-sm has-border">
+							<div class="wrapper">
+								<header>
+									<h1>Sinewave of your sound</h1>
+								</header>
+
+								<canvas class="visualizer" width="300" height="100"></canvas>
+
+								<form class="controls">
+									<div>
+										<label for="visual">Visualizer setting</label>
+										<select id="visual" name="visual">
+											<option value="sinewave"selected >Sinewave</option>
+											<option value="frequencybars"  >Frequency bars</option>
+											<option value="off">Off</option>
+										</select>
+									</div>
+								</form>
+
+							</div>
+						</div>
+					</div>
+					<div class="row has-border">
+						<div class="col-sm has-border">
+<!--							<div id='sketch-holder'>-->
+<!--								<video id="video" playsinline style="transform: scaleX(-1);"></video>-->
+<!--								<canvas id="output"></canvas>-->
+<!--							</div>-->
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 has-border">
+					<div class="row "> <!-- justify-content-center-->
+						<div id="planeGame">
+							<div id="myPlane"></div>
+
+							<p class="scoreLT">Score:<span id="scoreLTPlay">0</span></p>
+							<div id="stop"></div>
+							<!-- 提示框 -->
+							<div id="relAlert">
+								<div id="head">
+									<p>Game Over!</p>
+								</div>
+								<div id="scoreIn">1000</div>
+								<div id="btn">
+									<a id="btnStart" href="index.html">Play again</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 has-border">
+					<div class="row">
+						<div class="col-md has-border">
+							<img alt="col31 row 1" src="images/enemy/zhong.png" width="300px" height="500px"/>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</body>
+	<!-- Load React Content
+	<script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+	<script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+	<script src="script/react-playground.js"></script>
+	 -->
+
+	 <!-- Enable Bootstrap4 -->
+	 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+	 <!-- Enable GameAPI-->
+	 <script type="module" src="./script/index7.0.js"></script>
+	 <script type="module" src="./script/GameAPI.js"></script>
+<!--	<script type="module" src="./script/index.js"></script>-->
+	<!-- Audio-->
+	  <!--face detection scripts-->
+		<!-- <script src="./script/faceDetection.js"></script> -->
+<script type="module">
+	import {GameAPI} from './script/GameAPI.js';
+    function init1() {
+	let heading = document.querySelector('h1');
+
+	GameAPI.AllowCursorControlOnBomber(false);
+	GameAPI.StartGame();
+	GameAPI.SetBulletSpeed(50);
+	// heading.textContent = 'Voice-change-O-matic';
+	// document.body.removeEventListener('click', init)
+
+	// Older browsers might not implement mediaDevices at all, so we set an empty object first
+	if (navigator.mediaDevices === undefined) {
+	navigator.mediaDevices = {};
+	}
+
+
+	// Some browsers partially implement mediaDevices. We can't just assign an object
+	// with getUserMedia as it would overwrite existing properties.
+	// Here, we will just add the getUserMedia property if it's missing.
+	if (navigator.mediaDevices.getUserMedia === undefined) {
+	navigator.mediaDevices.getUserMedia = function (constraints) {
+
+	// First get ahold of the legacy getUserMedia, if present
+	var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+	// Some browsers just don't implement it - return a rejected promise with an error
+	// to keep a consistent interface
+	if (!getUserMedia) {
+	return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+	}
+
+	// Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
+	return new Promise(function (resolve, reject) {
+	getUserMedia.call(navigator, constraints, resolve, reject);
+	});
+	}
+	}
+
+
+	// set up forked web audio context, for multiple browsers
+	// window. is needed otherwise Safari explodes
+
+	var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+	// var voiceSelect = document.getElementById("voice");
+	var source;
+	var stream;
+
+	// grab the mute button to use below
+
+	var mute = document.querySelector('.mute');
+
+	//set up the different audio nodes we will use for the app
+
+	var analyser = audioCtx.createAnalyser();
+	analyser.minDecibels = -100;
+	analyser.maxDecibels = 100;
+	analyser.smoothingTimeConstant = 0.85;
+
+	var distortion = audioCtx.createWaveShaper();
+	var gainNode = audioCtx.createGain();
+	var biquadFilter = audioCtx.createBiquadFilter();
+	var convolver = audioCtx.createConvolver();
+
+	// distortion curve for the waveshaper, thanks to Kevin Ennis
+	// http://stackoverflow.com/questions/22312841/waveshaper-node-in-webaudio-how-to-emulate-distortion
+
+	// function makeDistortionCurve(amount) {
+	//     var k = typeof amount === 'number' ? amount : 50,
+	//         n_samples = 44100,
+	//         curve = new Float32Array(n_samples),
+	//         deg = Math.PI / 180,
+	//         i = 0,
+	//         x;
+	//     for ( ; i < n_samples; ++i ) {
+	//         x = i * 2 / n_samples - 1;
+	//         curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
+	//     }
+	//     return curve;
+	// };
+
+	// grab audio track via XHR for convolver node
+
+	var soundSource;
+	var ajaxRequest, HEIGHT, WIDTH;
+	ajaxRequest = new XMLHttpRequest();
+
+	ajaxRequest.open('GET', 'https://mdn.github.io/voice-change-o-matic/audio/concert-crowd.ogg', true);
+
+	ajaxRequest.responseType = 'arraybuffer';
+
+
+	ajaxRequest.onload = function () {
+	var audioData = ajaxRequest.response;
+
+	audioCtx.decodeAudioData(audioData, function (buffer) {
+	soundSource = audioCtx.createBufferSource();
+	convolver.buffer = buffer;
+	}, function (e) {
+	console.log("Error with decoding audio data" + e.err);
+	});
+
+	//soundSource.connect(audioCtx.destination);
+	//soundSource.loop = true;
+	//soundSource.start();
+	};
+
+	ajaxRequest.send();
+
+	// set up canvas context for visualizer
+
+	var canvas = document.querySelector('.visualizer');
+	var canvasCtx = canvas.getContext("2d");
+
+
+	var visualSelect = document.getElementById("visual");
+
+	var drawVisual;
+
+	//main block for doing the audio recording
+	if (navigator.mediaDevices.getUserMedia) {
+	console.log('getUserMedia supported.');
+	var constraints = {audio: true}
+	navigator.mediaDevices.getUserMedia(constraints)
+	.then(
+	function (stream) {
+	source = audioCtx.createMediaStreamSource(stream);
+	source.connect(distortion);
+	distortion.connect(biquadFilter);
+	biquadFilter.connect(gainNode);
+	convolver.connect(gainNode);
+	gainNode.connect(analyser);
+	analyser.connect(audioCtx.destination);
+
+	visualize();
+	})
+	.catch(function (err) {
+	console.log('The following gUM error occured: ' + err);
+	})
+	} else {
+	console.log('getUserMedia not supported on your browser!');
+	}
+
+	function visualize() {
+	WIDTH = canvas.width;
+	HEIGHT = canvas.height;
+
+
+	var visualSetting = visualSelect.value;
+	console.log(visualSetting);
+		/* debug */
+		// function StartFire(){GameAPI.StartFire(); console.log("GameÄPI.StartFire() finish!");}
+		/* debug */
+	if (visualSetting === "sinewave") {
+	analyser.fftSize = 2048;
+	var bufferLength = analyser.fftSize;
+	console.log(bufferLength);
+	var dataArray = new Uint8Array(bufferLength);
+
+	canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+
+	var draw = function () {
+
+	drawVisual = requestAnimationFrame(draw);
+
+	analyser.getByteTimeDomainData(dataArray);
+
+	canvasCtx.fillStyle = 'rgb(200, 200, 200)';
+	canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+	canvasCtx.lineWidth = 2;
+	canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
+
+	canvasCtx.beginPath();
+
+	var sliceWidth = WIDTH * 1.0 / bufferLength;
+	var x = 0;
+	var isFiring = false;
+		while (true){
+			console.log (dataArray);
+			break;}
+	for (var i = 0; i < bufferLength; i++) {
+	// console.log(dataArray[i]);
+
+
+	if (dataArray[i] > 128){
+	//alert("Exceeds Minimum, value is: " + dataArray[i]);
+	if (!isFiring) {
+	console.log('In audio sinewave: GameAPI.startfire()')
+		/* Debug */
+		// GameAPI.StartFire();
+	GameAPI.StartFire();
+		/* Debug */
+	isFiring = true;
+	}
+	//please invoke the function to start the plane.
+	//will also invoke the function to adjust the speed according to sound level.
+	// console.log("The value of finalSpeed is : "+finalSpeed);
+	var finalSpeed = adjustSpeedbySoundLevel(dataArray[i]);
+	//console.log("finalSpeed is "+finalSpeed);
+	GameAPI.SetBulletSpeed(finalSpeed);
+	} else {
+	GameAPI.CeaseFire();
+	isFiring = false;
+	}
+	var v = dataArray[i] / 128.0;
+	var y = v * HEIGHT / 2;
+
+	if (i === 0) {
+	canvasCtx.moveTo(x, y);
+	} else {
+	canvasCtx.lineTo(x, y);
+	}
+
+	x += sliceWidth;
+	}
+
+	canvasCtx.lineTo(canvas.width, canvas.height / 2);
+	canvasCtx.stroke();
+	};
+
+	draw();
+
+
+	} else if (visualSetting == "frequencybars") {
+	analyser.fftSize = 256;
+	var bufferLengthAlt = analyser.frequencyBinCount;
+	console.log(bufferLengthAlt);
+	var dataArrayAlt = new Uint8Array(bufferLengthAlt);
+	canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+
+	var drawAlt = function () {
+	drawVisual = requestAnimationFrame(drawAlt);
+
+	analyser.getByteFrequencyData(dataArrayAlt);
+
+	canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+	canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+	var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
+	var barHeight;
+	var x = 0;
+	var isFiring2 = false;
+	for (var j = 0; j < bufferLengthAlt; j++) {
+	console.log("Frequency test: " + dataArrayAlt[j]);
+	if (dataArrayAlt[j] > 0){
+	//alert("Exceeds Minimum, value is: " + dataArray[i]);
+	if (!isFiring2) {
+	console.log('In audio frequency bars: GameAPI.startfire()')
+
+			/* Debug */
+	//GameAPI.StartFire();
+		GameAPI.StartFire();
+		/* Debug */
+
+	isFiring2 = true;
+	}
+	//please invoke the function to start the plane.
+	//will also invoke the function to adjust the speed according to sound level.
+	var finalSpeed1 = adjustSpeedbySoundLevel2(dataArrayAlt[j]);
+	GameAPI.SetBulletSpeed(finalSpeed1);
+	} else {
+        // console.log("Cease fire");
+	GameAPI.CeaseFire();
+	isFiring2 = false;
+	}
+	barHeight = dataArrayAlt[j];
+
+	canvasCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
+	canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2);
+
+	x += barWidth + 1;
+	}
+	};
+
+	drawAlt();
+
+	} else if (visualSetting == "off") {
+	canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+	canvasCtx.fillStyle = "red";
+	canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+	}
+
+	}
+
+	//function used to change the speed of the plane according to the level of sound.
+	//A function is defined for the relationship between plane speed and plane
+
+	function adjustSpeedbySoundLevel(soundLevel) {
+
+	//assume relation between speed and soundLevel is speed = k(soundLevel-128) where k = 5.
+
+	return 3 * (soundLevel - 110);
+	}
+
+	function adjustSpeedbySoundLevel2(soundLevel) {
+	return 5 * (soundLevel + 10);
+	}
+
+	// event listeners to change visualize and voice settings
+
+	visualSelect.onchange = function () {
+	window.cancelAnimationFrame(drawVisual);
+	visualize();
+	};
+
+	// voiceSelect.onchange = function() {
+	//     voiceChange();
+	// };
+	//
+	// mute.onclick = voiceMute;
+	//
+	// function voiceMute() {
+	//     if (mute.id === "") {
+	//         gainNode.gain.value = 0;
+	//         mute.id = "activated";
+	//         mute.innerHTML = "Unmute";
+	//     } else {
+	//         gainNode.gain.value = 1;
+	//         mute.id = "";
+	//         mute.innerHTML = "Mute";
+	//     }
+	// }
+
+
+	}
+
+	// module.exports= MyTestCase;
+
+    init1();
+</script>
+
+	<!--		<script type="module">-->
+<!--			// import GameAPI from './script/GameAPI.js';-->
+<!--			// //创建一个GameAPI实例&ndash;&gt;-->
+<!--			// const api = new GameAPI();-->
+<!--			//-->
+<!--			// //让GameAPI启动游戏-->
+<!--			// api.StartGame();-->
+
+<!--			//禁止鼠标操控小飞机-->
+<!--			// api.AllowCursorControlOnBomber(true);-->
+<!--			//-->
+<!--			// //设置导弹的产生速率，单位：每秒多少个导弹-->
+<!--			// api.SetBulletSpeed(100);-->
+<!--			//-->
+<!--			// //让小飞机开火，小飞机默认初始时不开火-->
+
+<!--			让小飞机开始发射镭射光-->
+<!--		// 	api.BomberFiresLaser(true);-->
+<!--		//-->
+<!--		// 	//默认4000毫秒后让小飞机停止发射镭射光-->
+<!--		// 	var timer = setTimeout(-->
+<!--		// 				   () => {api.BomberFiresLaser(false);}-->
+<!--		// 				   , 4000);-->
+<!--		// 				   document.addEventListener("keydown", (e) => {-->
+<!--		// 	// compatible with IE-->
+<!--		// 	var event = e || window.event;-->
+<!--		// 	if (e) {-->
+<!--		// 		if (event.key === "W" || event.key === "w"){-->
+<!--		// 			api.StartFire();-->
+<!--		// 			console.log("Keydown 'w'/'W' ");-->
+<!--		// 		}-->
+<!--		// 	}-->
+<!--		// });-->
+<!--		//-->
+<!--		// document.addEventListener("keyup", (e) => {-->
+<!--		// 	// compatible with IE-->
+<!--		// 	var event = e || window.event;-->
+<!--		// 	if (e) {-->
+<!--		// 		if (event.key === "W" || event.key === "w"){-->
+<!--		// 			api.CeaseFire();-->
+<!--		// 			console.log("Keyup 'w'/'W' ");-->
+<!--		// 		}-->
+<!--		// 	}-->
+<!--		// })-->
+<!--		//-->
+<!--		// document.addEventListener("keydown", (e) => {-->
+<!--		// 	// compatible with IE-->
+<!--		// 	var event = e || window.event;-->
+<!--		// 	if (e) {-->
+<!--		// 		if (event.key === "L" || event.key === "l"){-->
+<!--		// 			api.BomberFiresLaser(true);-->
+<!--		// 			console.log("Keydown 'l'/'L' ");-->
+<!--		// 		}-->
+<!--		// 	}-->
+<!--		// });-->
+<!--		//-->
+<!--		// document.addEventListener("keyup", (e) => {-->
+<!--		// 	// compatible with IE-->
+<!--		// 	var event = e || window.event;-->
+<!--		// 	if (e) {-->
+<!--		// 		if (event.key === "L" || event.key === "l"){-->
+<!--		// 			api.BomberFiresLaser(false);-->
+<!--		// 			console.log("Keyup 'l'/'L' ");-->
+<!--		// 		}-->
+<!--		// 	}-->
+<!--		// })-->
+
+<!--		</script>-->
+
+</html>

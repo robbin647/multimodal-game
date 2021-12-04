@@ -74,14 +74,16 @@ The v.5 gives you these functions:
   > **Q: I download a copy from this repo. But the browser reports an error loading JS modules saying "Access to script ... from origin 'null' has been blocked by CORS policy...". What's wrong?**  
   
   > Ans: Loading JS module files from local file system is currently banned due to security concerns. You may try to put the whole repo on a Web Server so that all files come from the same origin. 
- 
-  > **Q: How will we combine our JS code together?**
 
-  > Ans: We will use [Webpack](https://webpack.js.org/guides/getting-started/).
- 
 
 ## Useful Information
 
 + This is a *multimodal* JavaScript game, built for fulfilling course requirement of CS3483 *Multimodal Interface Design* 
 
-+ Credit: We would like to give thanks to [zds-d](https://github.com/zds-d/planeGame.git), upon whose project was this game built. 
+## Credit
++ We would like to give thanks to [zds-d](https://github.com/zds-d/planeGame.git), upon whose project was this game built. 
++ Our thanks also go to the following authors/open-source projects:  
+  - [chrisdavidmills](https://github.com/chrisdavidmills), since our AudioControl module is based on his ["voice-change-o-matic"](https://github.com/mdn/voice-change-o-matic/) project  
+  - [BlazeFace Model](https://github.com/tensorflow/tfjs-models/tree/master/blazeface), which powers up the face detection in our game
+  - BootStrap v4  
+  - JQuery  

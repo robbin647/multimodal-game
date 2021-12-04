@@ -16,8 +16,8 @@ html{
 }
 .container{
     /* min-width: 400px; */
-    margin-left: 350px;
-    margin-top: 0px;
+    margin-left: 150px;
+    margin-top: -100px;
     padding-left: 86px;
     display: flex;
     flex-direction: column;
@@ -48,7 +48,8 @@ html{
 #plane{
     position: static;
 	/* float: left; */
-	margin-top: 0px;
+    margin-left: -50px;
+	margin-top: 100px;
 	width:572px;
 	height:600px;
 }

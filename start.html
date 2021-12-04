@@ -4,8 +4,16 @@
 		<meta charset="utf-8"/>
 		<title>Game of Bombers</title>
 		<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
-		<link rel="stylesheet" href="./extern/bootstrap.min.css"/ >
+		<link rel="stylesheet" href="./extern/bootstrap.min.css"></link>
 		<link rel="stylesheet" href="style/index.css"></link>
+		<script>
+			function sinewave(){
+				document.getElementById("visual").value = "sinewave";
+			}
+			function histogram(){
+				document.getElementById("visual").value = "frequencybars";
+			}
+		</script>
 	</head>
 	<body>
 		<!-- Advice: You can show HTML tags as plain text in HTML on a website or webpage by replacing < with &lt; or &60; 
@@ -36,6 +44,9 @@
 										<option value="frequencybars"  >Frequency Bars</option>
 										<!-- <option value="off">Off</option> -->
 									</select>
+									<input type="text" id="visual" name="visual">
+									<input type="button" onclick="sinwave()" value="Sinewave">
+									<input type="button" onclick="histogram()" value="Histogram">
 								</div>
 							</form>
 

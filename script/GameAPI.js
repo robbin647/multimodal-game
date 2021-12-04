@@ -417,7 +417,7 @@ class GameAPI {
     StartGame = () => {
         // 1.0 背景变动
         // Enable background sliding
-        //MyGame.bgMove();
+        MyGame.bgMove();
 
         //1.1 允许鼠标操控小飞机 
         // Enable cursor control on Bomber 
@@ -425,7 +425,7 @@ class GameAPI {
         
 
         // Generate enemy planes
-        // MyGame.enemyCreate();
+        // moved to GameAPI.CreateEnemy()
 
         //小飞机与敌机之间的碰撞检测
         // Check if Bomber crashes into an enemy plane
